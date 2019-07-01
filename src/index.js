@@ -750,5 +750,5 @@ IrisDelegateTool.prototype.txStatus = async function (txHash) {
     return axios.get(url).then(r => r.data, e => wrapError(this, e));
 };
 
-// module.exports = { IrisDelegateTool, CosmosDelegateTool };
-module.exports = CosmosDelegateTool;
+module.exports = { IrisDelegateTool, CosmosDelegateTool };
+// module.exports = CosmosDelegateTool;

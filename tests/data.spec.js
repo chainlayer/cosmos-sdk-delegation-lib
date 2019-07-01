@@ -15,7 +15,7 @@
  *  limitations under the License.
  ******************************************************************************* */
 // eslint-disable-next-line import/extensions,import/no-unresolved
-import CosmosDelegateTool from 'index.js';
+import { CosmosDelegateTool } from 'index.js';
 // eslint-disable-next-line import/extensions,import/no-unresolved
 import txscosmos from 'cosmos.js';
 import { getWallet, signWithMnemonic } from 'utils.js';
