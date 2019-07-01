@@ -634,7 +634,7 @@ function () {
             txContext.accountNumber = accountInfo.accountNumber; // eslint-disable-next-line no-param-reassign
 
             txContext.sequence = accountInfo.sequence;
-            return _context10.abrupt("return", _cosmos["default"].createDelegate(txContext, validatorBech32, uatomAmount, memo));
+            return _context10.abrupt("return", _cosmos["default"].createDelegate(txContext, validatorBech32, (0, _big["default"])(uatomAmount * 1000000), memo));
 
           case 10:
           case "end":

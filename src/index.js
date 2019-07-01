@@ -323,7 +323,7 @@ CosmosDelegateTool.prototype.txCreateDelegate = async function (
     return txscosmos.createDelegate(
         txContext,
         validatorBech32,
-        uatomAmount,
+        Big(uatomAmount*1000000),
         memo,
     );
 }

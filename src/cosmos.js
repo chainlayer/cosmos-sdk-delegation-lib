@@ -73,11 +73,10 @@ function applyGas(unsignedTx, gas) {
 
     // eslint-disable-next-line no-param-reassign
     unsignedTx.value.fee = {
-        // amount: [{
-        //     amount: (gas * DEFAULT_GAS_PRICE).toString(),
-        //     denom: DEFAULT_DENOM,
-        // }],
-        amount: [],
+        amount: [{
+            amount: (gas * DEFAULT_GAS_PRICE).toString(),
+            denom: DEFAULT_DENOM,
+        }],
         gas: gas.toString(),
     };
 

@@ -86,11 +86,10 @@ function applyGas(unsignedTx, gas) {
 
 
   unsignedTx.value.fee = {
-    // amount: [{
-    //     amount: (gas * DEFAULT_GAS_PRICE).toString(),
-    //     denom: DEFAULT_DENOM,
-    // }],
-    amount: [],
+    amount: [{
+      amount: (gas * DEFAULT_GAS_PRICE).toString(),
+      denom: DEFAULT_DENOM
+    }],
     gas: gas.toString()
   };
   return unsignedTx;
