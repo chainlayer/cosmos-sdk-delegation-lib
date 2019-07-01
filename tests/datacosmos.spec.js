@@ -192,7 +192,7 @@ test('create delegate tx', async () => {
     expect(unsignedTx.value).toHaveProperty('memo', 'some message');
     expect(unsignedTx.value.msg).toHaveProperty('length', 1);
     expect(unsignedTx.value.msg[0]).toHaveProperty('type', 'cosmos-sdk/MsgDelegate');
-    expect(unsignedTx.value.msg[0].value).toHaveProperty('amount', { amount: '8765', denom: 'uatom' });
+    expect(unsignedTx.value.msg[0].value).toHaveProperty('amount', { amount: '8765000000', denom: 'uatom' });
     expect(unsignedTx.value.msg[0].value).toHaveProperty('delegator_address', 'cosmos1k7ezdfu3j69npzhccs6m4hu99pydagsva0h0gp');
     expect(unsignedTx.value.msg[0].value).toHaveProperty('validator_address', 'cosmosvaloper1zyp0axz2t55lxkmgrvg4vpey2rf4ratcsud07t');
 });
@@ -304,13 +304,13 @@ test('relay delegation tx', async () => {
     expect(postData).toHaveProperty('mode', 'async');
     expect(postData).toHaveProperty('tx');
     expect(postData.tx).toHaveProperty('msg');
-    expect(postData.tx).toHaveProperty('fee', { amount: [], gas: '200000' });
+    expect(postData.tx).toHaveProperty('fee', { amount: [{"amount": "5000","denom": "uatom",},], gas: '200000' });
     expect(postData.tx).toHaveProperty('memo', 'some memo message');
     expect(postData.tx).toHaveProperty('signatures');
     expect(postData.tx.signatures[0]).toHaveProperty('account_number', '20');
     expect(postData.tx.signatures[0]).toHaveProperty('sequence', '10');
     expect(postData.tx.signatures[0]).toHaveProperty('signature',
-        'scoYRq/HVols47FggCEb+6wkkWJINuQNcgaSfRp7nogw6BE4VyubDmsOw1r1UuLewmmAlO4RwXxIt1O885ZPfQ==');
+        'E6iE3lFPPZk0ajh2Mb0p2mMVwFxW2s5g29OqcL99VakV0UYuVBIkOjXcmsPTpWDTf8Tua3ItQYX99Iu7uo/HoQ==');
     expect(postData.tx.signatures[0]).toHaveProperty('pub_key', {
         type: 'tendermint/PubKeySecp256k1',
         value: 'AoKE37ID2acC621g6nvPN7cJn2bTY6wCSpskmFm/t9w+',
@@ -404,13 +404,13 @@ test('relay redelegation tx', async () => {
     expect(postData).toHaveProperty('mode', 'async');
     expect(postData).toHaveProperty('tx');
     expect(postData.tx).toHaveProperty('msg');
-    expect(postData.tx).toHaveProperty('fee', { amount: [], gas: '200000' });
+    expect(postData.tx).toHaveProperty('fee', { amount: [{"amount": "5000","denom": "uatom",},], gas: '200000' });
     expect(postData.tx).toHaveProperty('memo', 'some memo message - redelegate');
     expect(postData.tx).toHaveProperty('signatures');
     expect(postData.tx.signatures[0]).toHaveProperty('account_number', '20');
     expect(postData.tx.signatures[0]).toHaveProperty('sequence', '10');
     expect(postData.tx.signatures[0]).toHaveProperty('signature',
-        'CMVFq8dK563fFCBBYajW0JqGiLLATrWTnnFP8dkQGxBTtkJBsF+x5hhgAAa1RdZ9EAHJiWXxDNnYr1NMPrGiaA==');
+        '4ReFyPpjPivbudkdv6taFae4BQMfbmToIZaF6AMt2vUY2wQRTV2UD0lZyVBuJFvRQNRFALAB+815/YO9vd+LWQ==');
     expect(postData.tx.signatures[0]).toHaveProperty('pub_key', {
         type: 'tendermint/PubKeySecp256k1',
         value: 'AoKE37ID2acC621g6nvPN7cJn2bTY6wCSpskmFm/t9w+',
@@ -499,13 +499,13 @@ test('relay undelegation tx', async () => {
     expect(postData).toHaveProperty('mode', 'async');
     expect(postData).toHaveProperty('tx');
     expect(postData.tx).toHaveProperty('msg');
-    expect(postData.tx).toHaveProperty('fee', { amount: [], gas: '200000' });
+    expect(postData.tx).toHaveProperty('fee', { amount: [{"amount": "5000","denom": "uatom",},], gas: '200000' });
     expect(postData.tx).toHaveProperty('memo', 'some memo message - undelegate');
     expect(postData.tx).toHaveProperty('signatures');
     expect(postData.tx.signatures[0]).toHaveProperty('account_number', '20');
     expect(postData.tx.signatures[0]).toHaveProperty('sequence', '10');
     expect(postData.tx.signatures[0]).toHaveProperty('signature',
-        'dFEI7nnuiwyoevH1xmBrTBRdweDn0ldUyd4a4aWa3z46KYj/fxWjEb6DO2MoK6QYHR7ApPVLWDtz226/34sHqA==');
+        'zr6DVe6wOuBw4Taecbi49ugRsZzcgUqRjiQo07T0VwJhpCwqjw7m7IxWW/AWxxZm9gFYy6NlOdGiZtRNqoD/FQ==');
     expect(postData.tx.signatures[0]).toHaveProperty('pub_key', {
         type: 'tendermint/PubKeySecp256k1',
         value: 'AoKE37ID2acC621g6nvPN7cJn2bTY6wCSpskmFm/t9w+',
