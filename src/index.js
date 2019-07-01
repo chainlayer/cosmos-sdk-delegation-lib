@@ -754,4 +754,3 @@ module.exports = {
     IrisDelegateTool: IrisDelegateTool,
     CosmosDelegateTool: CosmosDelegateTool
 };
-// module.exports = CosmosDelegateTool;
