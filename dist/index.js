@@ -1574,7 +1574,9 @@ function () {
   return function (_x58) {
     return _ref28.apply(this, arguments);
   };
-}(); // module.exports = { IrisDelegateTool, CosmosDelegateTool };
+}();
 
-
-module.exports = CosmosDelegateTool;
+module.exports = {
+  IrisDelegateTool: IrisDelegateTool,
+  CosmosDelegateTool: CosmosDelegateTool
+}; // module.exports = CosmosDelegateTool;
