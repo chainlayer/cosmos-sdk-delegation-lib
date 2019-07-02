@@ -199,6 +199,13 @@ IrisDelegateTool.prototype.scanAddresses = async function (minAccount, maxAccoun
     return answer;
 };
 
+IrisDelegateTool.prototype.getPrice = async function () {
+    const url = `https://min-api.cryptocompare.com/data/price?fsym=IRIS&tsyms=USD`;
+    return axios.get(url).then((r) => {
+        return r.data.USD;
+    }, e => wrapError(this, e));
+};
+
 IrisDelegateTool.prototype.retrieveValidators = async function () {
     const url = `${nodeURL(this)}/stake/validators`;
     return axios.get(url).then((r) => {

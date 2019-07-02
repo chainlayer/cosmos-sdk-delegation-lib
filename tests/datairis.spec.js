@@ -557,3 +557,18 @@ test('get tx status - known', async () => {
     expect(status).toHaveProperty('gas_used', '89709');
     expect(status).toHaveProperty('timestamp', '2019-05-10T20:28:07Z');
 });
+
+test('get price', async () => {
+    const mock = new MockAdapter(axios);
+    mock.onGet('https://min-api.cryptocompare.com/data/price?fsym=IRIS&tsyms=USD').reply(
+        200,
+        {
+            USD: 0.05827
+        },
+    );
+
+    const cdt = new IrisDelegateTool();
+    const status = await cdt.getPrice();
+    console.log(status)
+    expect(status).toBe(0.05827);
+});
