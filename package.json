@@ -54,7 +54,8 @@
     "test:unit": "jest -c jest.config.unit.js",
     "test:coveralls": "jest -c jest.config.unit.js --coverage --coverageReporters=text-lcov |coveralls",
     "test:coverage": "jest -c jest.config.unit.js --coverage",
-    "test:integration": "jest -c jest.config.integration.js --runInBand --detectOpenHandles"
+    "test:integration": "jest -c jest.config.integration.js --runInBand --detectOpenHandles",
+    "lint": "eslint ."
   },
   "moduleDirectories": [
     "node_modules",

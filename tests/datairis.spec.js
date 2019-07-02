@@ -126,7 +126,7 @@ test('get multiple accounts', async () => {
     ];
 
     const reply = await cdt.retrieveBalances(addrs);
-    console.log(JSON.stringify(reply, null, 4));
+    // console.log(JSON.stringify(reply, null, 4));
 
     expect(reply[0]).toHaveProperty('sequence', '12');
     expect(reply[0]).toHaveProperty('accountNumber', '34');
@@ -175,7 +175,7 @@ test('create delegate tx', async () => {
         memo,
     );
 
-    console.log(JSON.stringify(unsignedTx, null, 4));
+    // console.log(JSON.stringify(unsignedTx, null, 4));
 
     // A call to retrieve account data is made
     expect(mock.history.get[0].url).toEqual('mockNode/bank/accounts/cosmos1k7ezdfu3j69npzhccs6m4hu99pydagsva0h0gp');
@@ -220,8 +220,8 @@ test('get bytes to sign', async () => {
 
     const bytesToSign = txsiris.getBytesToSign(dummyTx, txContext);
 
-    console.log(bytesToSign);
-    console.log(mock.history);
+    // console.log(bytesToSign);
+    // console.log(mock.history);
 });
 
 test('relay delegation tx', async () => {
@@ -377,7 +377,7 @@ test('relay redelegation tx', async () => {
     // Now apply signature
     const signedTx = txsiris.applySignature(unsignedTx, txContext, signature);
 
-    console.log(JSON.stringify(signedTx), null, 4);
+    // console.log(JSON.stringify(signedTx), null, 4);
 
     // And submit the transaction
     const response = await cdt.txSubmit(signedTx);

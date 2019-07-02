@@ -20,5 +20,5 @@ const testMnemonic = 'table artist summer collect crack cruel lunar love gorilla
 
 test('get wallet from mnemonic', async () => {
     const wallet = getWallet(testMnemonic);
-    console.log(wallet);
+    // console.log(wallet);
 });

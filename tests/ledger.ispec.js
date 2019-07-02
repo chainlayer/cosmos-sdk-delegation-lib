@@ -19,6 +19,8 @@ import { CosmosDelegateTool } from 'index.js';
 import TransportNodeHid from '@ledgerhq/hw-transport-node-hid';
 let cdt;
 
+// TODO: Add tests for iris and terra
+
 test('connect', async () => {
     const transport = await TransportNodeHid.create(1000);
     cdt = new CosmosDelegateTool(transport);
@@ -27,10 +29,6 @@ test('connect', async () => {
 
     expect(cdt.connected).toBe(true);
     expect(cdt.lastError).toBe(null);
-    const addr = await cdt.retrieveAddress(0, 0);
-    console.log(addr);
-    console.log('hello');
-
 });
 
 test('get address', async () => {
@@ -50,7 +48,7 @@ test('get balance', async () => {
 
     cdt.setNodeURL('https://stargate.cosmos.network');
     const accountInfo = await cdt.getAccountInfo(addr);
-    console.log(accountInfo);
+    // console.log(accountInfo);
 });
 
 test('scan addresses', async () => {
@@ -73,7 +71,7 @@ test('scan addresses', async () => {
     // expect(addrs[3].bech32).toBe('cosmos1qvw52lmn9gpvem8welghrkc52m3zczyhlqjsl7');
     // expect(addrs[3].path).toEqual([44, 118, 1, 0, 3]);
 
-    console.log(addrs);
+    // console.log(addrs);
 });
 
 test('scan and get balances', async () => {
@@ -86,7 +84,7 @@ test('scan and get balances', async () => {
     cdt.setNodeURL('https://stargate.cosmos.network');
     const reply = await cdt.retrieveBalances(addrs);
 
-    console.log(reply);
+    // console.log(reply);
 });
 
 test('sign tx', async () => {
@@ -109,5 +107,5 @@ test('sign tx', async () => {
     );
 
     const signedTx = await cdt.sign(dummyTx, txContext);
-    console.log(signedTx);
+    // console.log(signedTx);
 });

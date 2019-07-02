@@ -15,9 +15,9 @@
  *  limitations under the License.
  ******************************************************************************* */
 // eslint-disable-next-line import/extensions,import/no-unresolved
-import { CosmosDelegateTool } from 'index.js';
+import { TerraDelegateTool } from 'index.js';
 // eslint-disable-next-line import/extensions,import/no-unresolved
-import txscosmos from 'cosmos.js';
+import txsterra from 'terra.js';
 import { getWallet, signWithMnemonic } from 'utils.js';
 
 import axios from 'axios';
@@ -30,7 +30,7 @@ test('get account info - default values', async () => {
         {},
     );
 
-    const cdt = new CosmosDelegateTool();
+    const cdt = new TerraDelegateTool();
     cdt.setNodeURL('mockNode');
 
     const addr = { bech32: 'cosmos1k7ezdfu3j69npzhccs6m4hu99pydagsva0h0gp' };
@@ -48,12 +48,12 @@ test('get account info - parsing', async () => {
             value: {
                 sequence: 10,
                 account_number: 20,
-                coins: [{ amount: 15, denom: 'uatom' }, { amount: 20, denom: 'other' }],
+                coins: [{ amount: 15, denom: 'uluna' }, { amount: 20, denom: 'other' }],
             },
         },
     );
 
-    const cdt = new CosmosDelegateTool();
+    const cdt = new TerraDelegateTool();
     cdt.setNodeURL('mockNode');
 
     const addr = { bech32: 'someaddress' };
@@ -65,7 +65,7 @@ test('get account info - parsing', async () => {
 });
 
 test('get multiple accounts', async () => {
-    const cdt = new CosmosDelegateTool();
+    const cdt = new TerraDelegateTool();
     cdt.setNodeURL('mockNodeURL');
 
     const mock = new MockAdapter(axios);
@@ -88,7 +88,7 @@ test('get multiple accounts', async () => {
             value: {
                 sequence: 12,
                 account_number: 34,
-                coins: [{ amount: 56, denom: 'uatom' }, { amount: 20, denom: 'other' }],
+                coins: [{ amount: 56, denom: 'uluna' }, { amount: 20, denom: 'other' }],
             },
         },
     );
@@ -113,7 +113,7 @@ test('get multiple accounts', async () => {
             value: {
                 sequence: 67,
                 account_number: 89,
-                coins: [{ amount: 1011, denom: 'uatom' }, { amount: 20, denom: 'other' }],
+                coins: [{ amount: 1011, denom: 'uluna' }, { amount: 20, denom: 'other' }],
             },
         },
     );
@@ -152,12 +152,12 @@ test('create delegate tx', async () => {
             value: {
                 sequence: 10,
                 account_number: 20,
-                coins: [{ amount: 15, denom: 'uatom' }, { amount: 20, denom: 'other' }],
+                coins: [{ amount: 15, denom: 'uluna' }, { amount: 20, denom: 'other' }],
             },
         },
     );
 
-    const cdt = new CosmosDelegateTool();
+    const cdt = new TerraDelegateTool();
     cdt.setNodeURL('mockNode');
 
     const txContext = {
@@ -192,7 +192,7 @@ test('create delegate tx', async () => {
     expect(unsignedTx.value).toHaveProperty('memo', 'some message');
     expect(unsignedTx.value.msg).toHaveProperty('length', 1);
     expect(unsignedTx.value.msg[0]).toHaveProperty('type', 'cosmos-sdk/MsgDelegate');
-    expect(unsignedTx.value.msg[0].value).toHaveProperty('amount', { amount: '8765000000', denom: 'uatom' });
+    expect(unsignedTx.value.msg[0].value).toHaveProperty('amount', { amount: '8765000000', denom: 'uluna' });
     expect(unsignedTx.value.msg[0].value).toHaveProperty('delegator_address', 'cosmos1k7ezdfu3j69npzhccs6m4hu99pydagsva0h0gp');
     expect(unsignedTx.value.msg[0].value).toHaveProperty('validator_address', 'cosmosvaloper1zyp0axz2t55lxkmgrvg4vpey2rf4ratcsud07t');
 });
@@ -204,7 +204,7 @@ test('get bytes to sign', async () => {
         {},
     );
 
-    const cdt = new CosmosDelegateTool();
+    const cdt = new TerraDelegateTool();
     cdt.setNodeURL('mockNode');
 
     const txContext = {
@@ -219,14 +219,14 @@ test('get bytes to sign', async () => {
         'some_memo',
     );
 
-    const bytesToSign = txscosmos.getBytesToSign(dummyTx, txContext);
+    const bytesToSign = txsterra.getBytesToSign(dummyTx, txContext);
 
     // console.log(bytesToSign);
     // console.log(mock.history);
 });
 
 test('relay delegation tx', async () => {
-    const cdt = new CosmosDelegateTool();
+    const cdt = new TerraDelegateTool();
     cdt.setNodeURL('mockNode');
     const mock = new MockAdapter(axios);
     mock.onGet('mockNode/auth/accounts/cosmos1k7ezdfu3j69npzhccs6m4hu99pydagsva0h0gp').reply(
@@ -235,7 +235,7 @@ test('relay delegation tx', async () => {
             value: {
                 sequence: 10,
                 account_number: 20,
-                coins: [{ amount: 15, denom: 'uatom' }, { amount: 20, denom: 'other' }],
+                coins: [{ amount: 15, denom: 'uluna' }, { amount: 20, denom: 'other' }],
             },
         },
     );
@@ -274,11 +274,11 @@ test('relay delegation tx', async () => {
         + 'price frost pole fury ranch fabric';
     const wallet = getWallet(mnemonic);
     expect(wallet.publicKey).toEqual(txContext.pk);
-    const bts = txscosmos.getBytesToSign(unsignedTx, txContext);
+    const bts = txsterra.getBytesToSign(unsignedTx, txContext);
     const signature = signWithMnemonic(bts, wallet);
 
     // Now apply signature
-    const signedTx = txscosmos.applySignature(unsignedTx, txContext, signature);
+    const signedTx = txsterra.applySignature(unsignedTx, txContext, signature);
 
     // And submit the transaction
     const response = await cdt.txSubmit(signedTx);
@@ -304,13 +304,13 @@ test('relay delegation tx', async () => {
     expect(postData).toHaveProperty('mode', 'async');
     expect(postData).toHaveProperty('tx');
     expect(postData.tx).toHaveProperty('msg');
-    expect(postData.tx).toHaveProperty('fee', { amount: [{"amount": "5000","denom": "uatom",},], gas: '200000' });
+    expect(postData.tx).toHaveProperty('fee', { amount: [{"amount": "5000","denom": "uluna",},], gas: '200000' });
     expect(postData.tx).toHaveProperty('memo', 'some memo message');
     expect(postData.tx).toHaveProperty('signatures');
     expect(postData.tx.signatures[0]).toHaveProperty('account_number', '20');
     expect(postData.tx.signatures[0]).toHaveProperty('sequence', '10');
     expect(postData.tx.signatures[0]).toHaveProperty('signature',
-        'E6iE3lFPPZk0ajh2Mb0p2mMVwFxW2s5g29OqcL99VakV0UYuVBIkOjXcmsPTpWDTf8Tua3ItQYX99Iu7uo/HoQ==');
+        'rwFwtmzA9z2iJnqaowdM3tkwMcatkgw+VJ/dxi7iaZBAFlpXQYeRmQ2jDKeF2X+qXznzlqNoxBZfg7CTbEOQ0Q==');
     expect(postData.tx.signatures[0]).toHaveProperty('pub_key', {
         type: 'tendermint/PubKeySecp256k1',
         value: 'AoKE37ID2acC621g6nvPN7cJn2bTY6wCSpskmFm/t9w+',
@@ -318,7 +318,7 @@ test('relay delegation tx', async () => {
 });
 
 test('relay redelegation tx', async () => {
-    const cdt = new CosmosDelegateTool();
+    const cdt = new TerraDelegateTool();
     cdt.setNodeURL('mockNode');
 
     const mock = new MockAdapter(axios);
@@ -328,7 +328,7 @@ test('relay redelegation tx', async () => {
             value: {
                 sequence: 10,
                 account_number: 20,
-                coins: [{ amount: 15, denom: 'uatom' }, { amount: 20, denom: 'other' }],
+                coins: [{ amount: 15, denom: 'uluna' }, { amount: 20, denom: 'other' }],
             },
         },
     );
@@ -362,8 +362,8 @@ test('relay redelegation tx', async () => {
         memo,
     );
 
-    // Check uatom to shares conversion
-    expect(unsignedTx.value.msg[0].value.amount).toEqual({ amount: '1000', denom: 'uatom' });
+    // Check uluna to shares conversion
+    expect(unsignedTx.value.msg[0].value.amount).toEqual({ amount: '1000', denom: 'uluna' });
 
     // Sign locally using mnemonic
     const mnemonic = 'table artist summer collect crack cruel '
@@ -372,11 +372,11 @@ test('relay redelegation tx', async () => {
         + 'price frost pole fury ranch fabric';
     const wallet = getWallet(mnemonic);
     expect(wallet.publicKey).toEqual(txContext.pk);
-    const bts = txscosmos.getBytesToSign(unsignedTx, txContext);
+    const bts = txsterra.getBytesToSign(unsignedTx, txContext);
     const signature = signWithMnemonic(bts, wallet);
 
     // Now apply signature
-    const signedTx = txscosmos.applySignature(unsignedTx, txContext, signature);
+    const signedTx = txsterra.applySignature(unsignedTx, txContext, signature);
 
     // console.log(JSON.stringify(signedTx), null, 4);
 
@@ -404,13 +404,13 @@ test('relay redelegation tx', async () => {
     expect(postData).toHaveProperty('mode', 'async');
     expect(postData).toHaveProperty('tx');
     expect(postData.tx).toHaveProperty('msg');
-    expect(postData.tx).toHaveProperty('fee', { amount: [{"amount": "5000","denom": "uatom",},], gas: '200000' });
+    expect(postData.tx).toHaveProperty('fee', { amount: [{"amount": "5000","denom": "uluna",},], gas: '200000' });
     expect(postData.tx).toHaveProperty('memo', 'some memo message - redelegate');
     expect(postData.tx).toHaveProperty('signatures');
     expect(postData.tx.signatures[0]).toHaveProperty('account_number', '20');
     expect(postData.tx.signatures[0]).toHaveProperty('sequence', '10');
     expect(postData.tx.signatures[0]).toHaveProperty('signature',
-        '4ReFyPpjPivbudkdv6taFae4BQMfbmToIZaF6AMt2vUY2wQRTV2UD0lZyVBuJFvRQNRFALAB+815/YO9vd+LWQ==');
+        'krrAOwREMUbiG3nyVa+Takwjez8mIlt0FTVDRa1bHEkPL03LjIUvFj6MZhNuTR7YGjRrsHmN2yCe79/DKcqipA==');
     expect(postData.tx.signatures[0]).toHaveProperty('pub_key', {
         type: 'tendermint/PubKeySecp256k1',
         value: 'AoKE37ID2acC621g6nvPN7cJn2bTY6wCSpskmFm/t9w+',
@@ -418,7 +418,7 @@ test('relay redelegation tx', async () => {
 });
 
 test('relay undelegation tx', async () => {
-    const cdt = new CosmosDelegateTool();
+    const cdt = new TerraDelegateTool();
     cdt.setNodeURL('mockNode');
     const mock = new MockAdapter(axios);
     mock.onGet('mockNode/auth/accounts/cosmos1k7ezdfu3j69npzhccs6m4hu99pydagsva0h0gp').reply(
@@ -427,7 +427,7 @@ test('relay undelegation tx', async () => {
             value: {
                 sequence: 10,
                 account_number: 20,
-                coins: [{ amount: 15, denom: 'uatom' }, { amount: 20, denom: 'other' }],
+                coins: [{ amount: 15, denom: 'uluna' }, { amount: 20, denom: 'other' }],
             },
         },
     );
@@ -459,8 +459,8 @@ test('relay undelegation tx', async () => {
         memo,
     );
 
-    // Check uatom to shares conversion
-    expect(unsignedTx.value.msg[0].value.amount).toEqual({ amount: '300', denom: 'uatom' });
+    // Check uluna to shares conversion
+    expect(unsignedTx.value.msg[0].value.amount).toEqual({ amount: '300', denom: 'uluna' });
 
     // Sign locally using mnemonic
     const mnemonic = 'table artist summer collect crack cruel '
@@ -469,11 +469,11 @@ test('relay undelegation tx', async () => {
         + 'price frost pole fury ranch fabric';
     const wallet = getWallet(mnemonic);
     expect(wallet.publicKey).toEqual(txContext.pk);
-    const bts = txscosmos.getBytesToSign(unsignedTx, txContext);
+    const bts = txsterra.getBytesToSign(unsignedTx, txContext);
     const signature = signWithMnemonic(bts, wallet);
 
     // Now apply signature
-    const signedTx = txscosmos.applySignature(unsignedTx, txContext, signature);
+    const signedTx = txsterra.applySignature(unsignedTx, txContext, signature);
 
     // And submit the transaction
     const response = await cdt.txSubmit(signedTx);
@@ -499,13 +499,13 @@ test('relay undelegation tx', async () => {
     expect(postData).toHaveProperty('mode', 'async');
     expect(postData).toHaveProperty('tx');
     expect(postData.tx).toHaveProperty('msg');
-    expect(postData.tx).toHaveProperty('fee', { amount: [{"amount": "5000","denom": "uatom",},], gas: '200000' });
+    expect(postData.tx).toHaveProperty('fee', { amount: [{"amount": "5000","denom": "uluna",},], gas: '200000' });
     expect(postData.tx).toHaveProperty('memo', 'some memo message - undelegate');
     expect(postData.tx).toHaveProperty('signatures');
     expect(postData.tx.signatures[0]).toHaveProperty('account_number', '20');
     expect(postData.tx.signatures[0]).toHaveProperty('sequence', '10');
     expect(postData.tx.signatures[0]).toHaveProperty('signature',
-        'zr6DVe6wOuBw4Taecbi49ugRsZzcgUqRjiQo07T0VwJhpCwqjw7m7IxWW/AWxxZm9gFYy6NlOdGiZtRNqoD/FQ==');
+        'BvdFPOPWeanSTRnGacU9JM82PCU4QToRy57vvbIiaUFRCu0XCyLVR3OYgpb/nvSWNj5iirKr78EZd94HLxTsHg==');
     expect(postData.tx.signatures[0]).toHaveProperty('pub_key', {
         type: 'tendermint/PubKeySecp256k1',
         value: 'AoKE37ID2acC621g6nvPN7cJn2bTY6wCSpskmFm/t9w+',
@@ -521,7 +521,7 @@ test('get tx status - unknown', async () => {
         },
     );
 
-    const cdt = new CosmosDelegateTool();
+    const cdt = new TerraDelegateTool();
     cdt.setNodeURL('mockNode');
 
     const txHash = '0000000000000000000000000000000000000000000000000000000000000000';
@@ -546,7 +546,7 @@ test('get tx status - known', async () => {
         },
     );
 
-    const cdt = new CosmosDelegateTool();
+    const cdt = new TerraDelegateTool();
     cdt.setNodeURL('mockNode');
 
     const txHash = '0F3C6CD851701FAF3EE104ECD35D0B38D9AB91A32AC7D51B424F90954341C8EB';
