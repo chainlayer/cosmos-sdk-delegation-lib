@@ -2,11 +2,11 @@
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
-var _IrisDelegateTool = _interopRequireDefault(require("IrisDelegateTool"));
+var _IrisDelegateTool = _interopRequireDefault(require("./IrisDelegateTool"));
 
-var _CosmosDelegateTool = _interopRequireDefault(require("CosmosDelegateTool"));
+var _CosmosDelegateTool = _interopRequireDefault(require("./CosmosDelegateTool"));
 
-var _TerraDelegateTool = _interopRequireDefault(require("TerraDelegateTool"));
+var _TerraDelegateTool = _interopRequireDefault(require("./TerraDelegateTool"));
 
 /** ******************************************************************************
  *  (c) 2019 ChainLayer

@@ -16,14 +16,14 @@
  ******************************************************************************* */
 
 // eslint-disable-next-line import/no-unresolved
-import IrisDelegateTool from 'IrisDelegateTool';
+import IrisDelegateTool from './IrisDelegateTool';
 // eslint-disable-next-line import/no-unresolved
-import CosmosDelegateTool from 'CosmosDelegateTool';
+import CosmosDelegateTool from './CosmosDelegateTool';
 // eslint-disable-next-line import/no-unresolved
-import TerraDelegateTool from 'TerraDelegateTool';
+import TerraDelegateTool from './TerraDelegateTool';
 
 module.exports = {
-    IrisDelegateTool,
-    TerraDelegateTool,
-    CosmosDelegateTool,
+    IrisDelegateTool: IrisDelegateTool,
+    TerraDelegateTool: TerraDelegateTool,
+    CosmosDelegateTool: CosmosDelegateTool
 };
