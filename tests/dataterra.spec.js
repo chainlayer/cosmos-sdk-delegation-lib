@@ -38,7 +38,7 @@ test('get account info - default values', async () => {
 
     expect(answer).toHaveProperty('sequence', '0');
     expect(answer).toHaveProperty('accountNumber', '0');
-    expect(answer).toHaveProperty('balanceuAtom', '0');
+    expect(answer).toHaveProperty('balance', '0');
 });
 
 test('get account info - parsing', async () => {
@@ -58,10 +58,10 @@ test('get account info - parsing', async () => {
 
     const addr = { bech32: 'someaddress' };
     const answer = await cdt.getAccountInfo(addr);
-
+    console.log(answer)
     expect(answer).toHaveProperty('sequence', '10');
     expect(answer).toHaveProperty('accountNumber', '20');
-    expect(answer).toHaveProperty('balanceuAtom', '15');
+    expect(answer).toHaveProperty('balance', '15');
 });
 
 test('get multiple accounts', async () => {
@@ -131,15 +131,15 @@ test('get multiple accounts', async () => {
 
     expect(reply[0]).toHaveProperty('sequence', '12');
     expect(reply[0]).toHaveProperty('accountNumber', '34');
-    expect(reply[0]).toHaveProperty('balanceuAtom', '56');
-    expect(reply[0]).toHaveProperty('delegationsTotaluAtoms', '1050');
+    expect(reply[0]).toHaveProperty('balance', '56');
+    expect(reply[0]).toHaveProperty('delegationsTotal', '1050');
     expect(reply[0]).toHaveProperty('delegations');
     expect(Object.keys(reply[0].delegations).length).toEqual(2);
 
     expect(reply[1]).toHaveProperty('sequence', '67');
     expect(reply[1]).toHaveProperty('accountNumber', '89');
-    expect(reply[1]).toHaveProperty('balanceuAtom', '1011');
-    expect(reply[1]).toHaveProperty('delegationsTotaluAtoms', '0');
+    expect(reply[1]).toHaveProperty('balance', '1011');
+    expect(reply[1]).toHaveProperty('delegationsTotal', '0');
     expect(reply[1]).toHaveProperty('delegations');
     expect(Object.keys(reply[1].delegations).length).toEqual(0);
 });
@@ -192,7 +192,7 @@ test('create delegate tx', async () => {
     expect(unsignedTx.value).toHaveProperty('memo', 'some message');
     expect(unsignedTx.value.msg).toHaveProperty('length', 1);
     expect(unsignedTx.value.msg[0]).toHaveProperty('type', 'cosmos-sdk/MsgDelegate');
-    expect(unsignedTx.value.msg[0].value).toHaveProperty('amount', { amount: '8765000000', denom: 'uluna' });
+    expect(unsignedTx.value.msg[0].value).toHaveProperty('amount', { amount: '8765', denom: 'uluna' });
     expect(unsignedTx.value.msg[0].value).toHaveProperty('delegator_address', 'cosmos1k7ezdfu3j69npzhccs6m4hu99pydagsva0h0gp');
     expect(unsignedTx.value.msg[0].value).toHaveProperty('validator_address', 'cosmosvaloper1zyp0axz2t55lxkmgrvg4vpey2rf4ratcsud07t');
 });
@@ -310,7 +310,7 @@ test('relay delegation tx', async () => {
     expect(postData.tx.signatures[0]).toHaveProperty('account_number', '20');
     expect(postData.tx.signatures[0]).toHaveProperty('sequence', '10');
     expect(postData.tx.signatures[0]).toHaveProperty('signature',
-        'rwFwtmzA9z2iJnqaowdM3tkwMcatkgw+VJ/dxi7iaZBAFlpXQYeRmQ2jDKeF2X+qXznzlqNoxBZfg7CTbEOQ0Q==');
+        'qRvCMzUAZO3SQfbPX/wn4PyVvUb/UNF2tkBL05xIuTFOPOA0eszhM6KXEOpyatO+kOlXyaGr85npJLdddBEhjA==');
     expect(postData.tx.signatures[0]).toHaveProperty('pub_key', {
         type: 'tendermint/PubKeySecp256k1',
         value: 'AoKE37ID2acC621g6nvPN7cJn2bTY6wCSpskmFm/t9w+',

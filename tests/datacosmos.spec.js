@@ -38,7 +38,7 @@ test('get account info - default values', async () => {
 
     expect(answer).toHaveProperty('sequence', '0');
     expect(answer).toHaveProperty('accountNumber', '0');
-    expect(answer).toHaveProperty('balanceuAtom', '0');
+    expect(answer).toHaveProperty('balance', '0');
 });
 
 test('get account info - parsing', async () => {
@@ -61,7 +61,7 @@ test('get account info - parsing', async () => {
 
     expect(answer).toHaveProperty('sequence', '10');
     expect(answer).toHaveProperty('accountNumber', '20');
-    expect(answer).toHaveProperty('balanceuAtom', '15');
+    expect(answer).toHaveProperty('balance', '15');
 });
 
 test('get multiple accounts', async () => {
@@ -131,15 +131,15 @@ test('get multiple accounts', async () => {
 
     expect(reply[0]).toHaveProperty('sequence', '12');
     expect(reply[0]).toHaveProperty('accountNumber', '34');
-    expect(reply[0]).toHaveProperty('balanceuAtom', '56');
-    expect(reply[0]).toHaveProperty('delegationsTotaluAtoms', '1050');
+    expect(reply[0]).toHaveProperty('balance', '56');
+    expect(reply[0]).toHaveProperty('delegationsTotal', '1050');
     expect(reply[0]).toHaveProperty('delegations');
     expect(Object.keys(reply[0].delegations).length).toEqual(2);
 
     expect(reply[1]).toHaveProperty('sequence', '67');
     expect(reply[1]).toHaveProperty('accountNumber', '89');
-    expect(reply[1]).toHaveProperty('balanceuAtom', '1011');
-    expect(reply[1]).toHaveProperty('delegationsTotaluAtoms', '0');
+    expect(reply[1]).toHaveProperty('balance', '1011');
+    expect(reply[1]).toHaveProperty('delegationsTotal', '0');
     expect(reply[1]).toHaveProperty('delegations');
     expect(Object.keys(reply[1].delegations).length).toEqual(0);
 });
@@ -166,7 +166,7 @@ test('create delegate tx', async () => {
     };
 
     const validatorAddrBech32 = 'cosmosvaloper1zyp0axz2t55lxkmgrvg4vpey2rf4ratcsud07t';
-    const uAtomAmount = 8765;
+    const uAtomAmount = 8765000000;
     const memo = 'some message';
 
     const unsignedTx = await cdt.txCreateDelegate(
@@ -250,7 +250,7 @@ test('relay delegation tx', async () => {
     // ////////////////////
 
     const validatorAddrBech32 = 'cosmosvaloper19krh5y8y5wce3mmj3dxffyc7hgu9tsxngy0whv';
-    const uAtomAmount = 100000;
+    const uAtomAmount = 100000000000;
     const memo = 'some memo message';
 
     const txContext = {
@@ -344,7 +344,7 @@ test('relay redelegation tx', async () => {
 
     const validatorAddrBech32Source = 'cosmosvaloper19krh5y8y5wce3mmj3dxffyc7hgu9tsxngy0whv';
     const validatorAddrBech32Dest = 'cosmosvaloper1sxx9mszve0gaedz5ld7qdkjkfv8z992ax69k08';
-    const uAtomAmount = 1000;
+    const uAtomAmount = 1000000000;
     const memo = 'some memo message - redelegate';
 
     const txContext = {
@@ -363,7 +363,7 @@ test('relay redelegation tx', async () => {
     );
 
     // Check uatom to shares conversion
-    expect(unsignedTx.value.msg[0].value.amount).toEqual({ amount: '1000', denom: 'uatom' });
+    expect(unsignedTx.value.msg[0].value.amount).toEqual({ amount: '1000000000', denom: 'uatom' });
 
     // Sign locally using mnemonic
     const mnemonic = 'table artist summer collect crack cruel '
@@ -410,7 +410,7 @@ test('relay redelegation tx', async () => {
     expect(postData.tx.signatures[0]).toHaveProperty('account_number', '20');
     expect(postData.tx.signatures[0]).toHaveProperty('sequence', '10');
     expect(postData.tx.signatures[0]).toHaveProperty('signature',
-        '4ReFyPpjPivbudkdv6taFae4BQMfbmToIZaF6AMt2vUY2wQRTV2UD0lZyVBuJFvRQNRFALAB+815/YO9vd+LWQ==');
+        'zajdWSJKEG4EN4TdMAhImIrA39osdR1KnVCXSkUk18sFmoHhq6YbuYWYSp6Kq0uvK9InFcBMOQsFzCzGLUVLwA==');
     expect(postData.tx.signatures[0]).toHaveProperty('pub_key', {
         type: 'tendermint/PubKeySecp256k1',
         value: 'AoKE37ID2acC621g6nvPN7cJn2bTY6wCSpskmFm/t9w+',
@@ -442,7 +442,7 @@ test('relay undelegation tx', async () => {
     // ////////////////////
 
     const validatorAddrBech32 = 'cosmosvaloper19krh5y8y5wce3mmj3dxffyc7hgu9tsxngy0whv';
-    const uAtomAmount = 300;
+    const uAtomAmount = 300000000;
     const memo = 'some memo message - undelegate';
 
     const txContext = {
@@ -460,7 +460,7 @@ test('relay undelegation tx', async () => {
     );
 
     // Check uatom to shares conversion
-    expect(unsignedTx.value.msg[0].value.amount).toEqual({ amount: '300', denom: 'uatom' });
+    expect(unsignedTx.value.msg[0].value.amount).toEqual({ amount: '300000000', denom: 'uatom' });
 
     // Sign locally using mnemonic
     const mnemonic = 'table artist summer collect crack cruel '
@@ -505,7 +505,7 @@ test('relay undelegation tx', async () => {
     expect(postData.tx.signatures[0]).toHaveProperty('account_number', '20');
     expect(postData.tx.signatures[0]).toHaveProperty('sequence', '10');
     expect(postData.tx.signatures[0]).toHaveProperty('signature',
-        'zr6DVe6wOuBw4Taecbi49ugRsZzcgUqRjiQo07T0VwJhpCwqjw7m7IxWW/AWxxZm9gFYy6NlOdGiZtRNqoD/FQ==');
+        'oBpXq5Z/oqEPsqWJKBeQgRjfQck4p7h2spW321rqj29cPnXFholyMcpVFgWDZ0QFxJwOwi2uF6odLdVwb3Gcvg==');
     expect(postData.tx.signatures[0]).toHaveProperty('pub_key', {
         type: 'tendermint/PubKeySecp256k1',
         value: 'AoKE37ID2acC621g6nvPN7cJn2bTY6wCSpskmFm/t9w+',

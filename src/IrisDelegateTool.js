@@ -210,7 +210,7 @@ IrisDelegateTool.prototype.getAccountInfo = async function (addr) {
     const txContext = {
         sequence: '0',
         accountNumber: '0',
-        balanceirisatta: '0',
+        balance: '0',
     };
 
     return axios.get(url).then((r) => {
@@ -222,7 +222,7 @@ IrisDelegateTool.prototype.getAccountInfo = async function (addr) {
                 if (r.data.value.coins !== null) {
                     const tmp = r.data.value.coins.filter(x => x.denom === txsiris.DEFAULT_DENOM);
                     if (tmp.length > 0) {
-                        txContext.balanceirisatta = Big(tmp[0].amount).toString();
+                        txContext.balance = Big(tmp[0].amount).toString();
                     }
                 }
             }
@@ -238,7 +238,7 @@ IrisDelegateTool.prototype.getAccountDelegations = async function (validators, a
     return axios.get(url).then((r) => {
         const txContext = {
             delegations: {},
-            delegationsTotaluAtoms: '0',
+            delegationsTotal: '0',
         };
 
         const delegations = {};
@@ -271,7 +271,7 @@ IrisDelegateTool.prototype.getAccountDelegations = async function (validators, a
         }
 
         txContext.delegations = delegations;
-        txContext.delegationsTotaluAtoms = totalDelegation.toString();
+        txContext.delegationsTotal = totalDelegation.toString();
 
         return txContext;
     }, e => wrapError(this, e));
@@ -327,7 +327,7 @@ IrisDelegateTool.prototype.txCreateDelegate = async function (
     return txsiris.createDelegate(
         txContext,
         validatorBech32,
-        Big(uatomAmount*1000000000000000000),
+        Big(uatomAmount*1000000000),
         memo,
     );
 }

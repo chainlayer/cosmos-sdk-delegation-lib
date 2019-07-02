@@ -38,7 +38,7 @@ test('get account info - default values', async () => {
 
     expect(answer).toHaveProperty('sequence', '0');
     expect(answer).toHaveProperty('accountNumber', '0');
-    expect(answer).toHaveProperty('balanceirisatta', '0');
+    expect(answer).toHaveProperty('balance', '0');
 });
 
 test('get account info - parsing', async () => {
@@ -60,7 +60,7 @@ test('get account info - parsing', async () => {
     const answer = await cdt.getAccountInfo(addr);
     expect(answer).toHaveProperty('sequence', '10');
     expect(answer).toHaveProperty('accountNumber', '20');
-    expect(answer).toHaveProperty('balanceirisatta', '15');
+    expect(answer).toHaveProperty('balance', '15');
 });
 
 test('get multiple accounts', async () => {
@@ -130,15 +130,15 @@ test('get multiple accounts', async () => {
 
     expect(reply[0]).toHaveProperty('sequence', '12');
     expect(reply[0]).toHaveProperty('accountNumber', '34');
-    expect(reply[0]).toHaveProperty('balanceirisatta', '56');
-    expect(reply[0]).toHaveProperty('delegationsTotaluAtoms', '1050');
+    expect(reply[0]).toHaveProperty('balance', '56');
+    expect(reply[0]).toHaveProperty('delegationsTotal', '1050');
     expect(reply[0]).toHaveProperty('delegations');
     expect(Object.keys(reply[0].delegations).length).toEqual(2);
 
     expect(reply[1]).toHaveProperty('sequence', '67');
     expect(reply[1]).toHaveProperty('accountNumber', '89');
-    expect(reply[1]).toHaveProperty('balanceirisatta', '1011');
-    expect(reply[1]).toHaveProperty('delegationsTotaluAtoms', '0');
+    expect(reply[1]).toHaveProperty('balance', '1011');
+    expect(reply[1]).toHaveProperty('delegationsTotal', '0');
     expect(reply[1]).toHaveProperty('delegations');
     expect(Object.keys(reply[1].delegations).length).toEqual(0);
 });
@@ -191,7 +191,7 @@ test('create delegate tx', async () => {
     expect(unsignedTx.value).toHaveProperty('memo', 'some message');
     expect(unsignedTx.value.msg).toHaveProperty('length', 1);
     expect(unsignedTx.value.msg[0]).toHaveProperty('type', 'irishub/stake/MsgDelegate');
-    expect(unsignedTx.value.msg[0].value).toHaveProperty('delegation', { amount: '8765000000000000000000', denom: 'iris-atto' });
+    expect(unsignedTx.value.msg[0].value).toHaveProperty('delegation', { amount: '8765000000000', denom: 'iris-atto' });
     expect(unsignedTx.value.msg[0].value).toHaveProperty('delegator_addr', 'cosmos1k7ezdfu3j69npzhccs6m4hu99pydagsva0h0gp');
     expect(unsignedTx.value.msg[0].value).toHaveProperty('validator_addr', 'cosmosvaloper1zyp0axz2t55lxkmgrvg4vpey2rf4ratcsud07t');
 });
@@ -309,7 +309,7 @@ test('relay delegation tx', async () => {
     expect(postData.tx.signatures[0]).toHaveProperty('account_number', '20');
     expect(postData.tx.signatures[0]).toHaveProperty('sequence', '10');
     expect(postData.tx.signatures[0]).toHaveProperty('signature',
-        'KRHnvK9i9FejLITbOKcF1PrBjYkukymK4ZVtL/+pl49/BQiWQONurqEljX4+q6JCjujevQj/hqNE0NG1jsR2bg==');
+        'iuLPCAv9u47Ss9InOdXkbYwKDlwvAgqOUOqZf9aWIcMf5pogSIlcIsG2zCVnfEZFj5Vaqt9xWiuLIZGaqk7nPQ==');
     expect(postData.tx.signatures[0]).toHaveProperty('pub_key', {
         type: 'tendermint/PubKeySecp256k1',
         value: 'AoKE37ID2acC621g6nvPN7cJn2bTY6wCSpskmFm/t9w+',

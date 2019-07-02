@@ -209,7 +209,7 @@ CosmosDelegateTool.prototype.getAccountInfo = async function (addr) {
     const txContext = {
         sequence: '0',
         accountNumber: '0',
-        balanceuAtom: '0',
+        balance: '0',
     };
 
     return axios.get(url).then((r) => {
@@ -221,7 +221,7 @@ CosmosDelegateTool.prototype.getAccountInfo = async function (addr) {
                 if (r.data.value.coins !== null) {
                     const tmp = r.data.value.coins.filter(x => x.denom === txscosmos.DEFAULT_DENOM);
                     if (tmp.length > 0) {
-                        txContext.balanceuAtom = Big(tmp[0].amount).toString();
+                        txContext.balance = Big(tmp[0].amount).toString();
                     }
                 }
             }
@@ -237,7 +237,7 @@ CosmosDelegateTool.prototype.getAccountDelegations = async function (validators,
     return axios.get(url).then((r) => {
         const txContext = {
             delegations: {},
-            delegationsTotaluAtoms: '0',
+            delegationsTotal: '0',
         };
 
         const delegations = {};
@@ -270,7 +270,7 @@ CosmosDelegateTool.prototype.getAccountDelegations = async function (validators,
         }
 
         txContext.delegations = delegations;
-        txContext.delegationsTotaluAtoms = totalDelegation.toString();
+        txContext.delegationsTotal = totalDelegation.toString();
 
         return txContext;
     }, e => wrapError(this, e));
@@ -326,7 +326,7 @@ CosmosDelegateTool.prototype.txCreateDelegate = async function (
     return txscosmos.createDelegate(
         txContext,
         validatorBech32,
-        Big(uatomAmount*1000000),
+        Big(uatomAmount),
         memo,
     );
 }
