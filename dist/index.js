@@ -90,11 +90,17 @@ var CosmosDelegateTool = function CosmosDelegateTool(transport) {
   this.resturl = null;
   this.requiredVersionMajor = 1;
   this.requiredVersionMinor = 1;
+  this.hrp = defaultHrpCosmos;
 }; // eslint-disable-next-line no-unused-vars
 
 
 CosmosDelegateTool.prototype.setNodeURL = function (resturl) {
   this.resturl = resturl;
+}; // eslint-disable-next-line no-unused-vars
+
+
+CosmosDelegateTool.prototype.setHrp = function (hrp) {
+  this.hrp = hrp;
 }; // Detect when a ledger device is connected and verify the cosmos app is running.
 
 
@@ -270,7 +276,7 @@ function () {
             return _context3.abrupt("return", {
               pk: pk.compressed_pk.toString('hex'),
               path: path,
-              bech32: (0, _ledgerCosmosJs.getBech32FromPK)(defaultHrpCosmos, pk.compressed_pk)
+              bech32: (0, _ledgerCosmosJs.getBech32FromPK)(this.hrp, pk.compressed_pk)
             });
 
           case 9:
@@ -838,11 +844,17 @@ var IrisDelegateTool = function IrisDelegateTool(transport) {
   this.resturl = null;
   this.requiredVersionMajor = 1;
   this.requiredVersionMinor = 1;
+  this.hrp = defaultHrpIris;
 }; // eslint-disable-next-line no-unused-vars
 
 
 IrisDelegateTool.prototype.setNodeURL = function (resturl) {
   this.resturl = resturl;
+}; // eslint-disable-next-line no-unused-vars
+
+
+CosmosDelegateTool.prototype.setHrp = function (hrp) {
+  this.hrp = hrp;
 }; // Detect when a ledger device is connected and verify the cosmos app is running.
 
 
@@ -1018,7 +1030,7 @@ function () {
             return _context17.abrupt("return", {
               pk: pk.compressed_pk.toString('hex'),
               path: path,
-              bech32: (0, _ledgerCosmosJs.getBech32FromPK)(defaultHrpIris, pk.compressed_pk)
+              bech32: (0, _ledgerCosmosJs.getBech32FromPK)(this.hrp, pk.compressed_pk)
             });
 
           case 9:
