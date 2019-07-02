@@ -158,7 +158,7 @@ function createDelegate(
     const txSkeleton = createSkeleton(txContext);
 
     const txMsg = {
-        type: 'cosmos-sdk/MsgDelegate',
+        type: 'staking/MsgDelegate',
         value: {
             amount: {
                 amount: uatomAmount.toString(),
@@ -186,7 +186,7 @@ function createUndelegate(
     const txSkeleton = createSkeleton(txContext);
 
     const txMsg = {
-        type: 'cosmos-sdk/MsgUndelegate',
+        type: 'staking/MsgUndelegate',
         value: {
             amount: {
                 amount: uatomAmount.toString(),
@@ -215,7 +215,7 @@ function createRedelegate(
     const txSkeleton = createSkeleton(txContext);
 
     const txMsg = {
-        type: 'cosmos-sdk/MsgBeginRedelegate',
+        type: 'staking/MsgBeginRedelegate',
         value: {
             amount: {
                 amount: uatomAmount.toString(),

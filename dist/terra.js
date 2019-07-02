@@ -169,7 +169,7 @@ function applySignature(unsignedTx, txContext, secp256k1Sig) {
 function createDelegate(txContext, validatorBech32, uatomAmount, memo) {
   var txSkeleton = createSkeleton(txContext);
   var txMsg = {
-    type: 'cosmos-sdk/MsgDelegate',
+    type: 'staking/MsgDelegate',
     value: {
       amount: {
         amount: uatomAmount.toString(),
@@ -189,7 +189,7 @@ function createDelegate(txContext, validatorBech32, uatomAmount, memo) {
 function createUndelegate(txContext, validatorBech32, uatomAmount, memo) {
   var txSkeleton = createSkeleton(txContext);
   var txMsg = {
-    type: 'cosmos-sdk/MsgUndelegate',
+    type: 'staking/MsgUndelegate',
     value: {
       amount: {
         amount: uatomAmount.toString(),
@@ -209,7 +209,7 @@ function createUndelegate(txContext, validatorBech32, uatomAmount, memo) {
 function createRedelegate(txContext, validatorSourceBech32, validatorDestBech32, uatomAmount, memo) {
   var txSkeleton = createSkeleton(txContext);
   var txMsg = {
-    type: 'cosmos-sdk/MsgBeginRedelegate',
+    type: 'staking/MsgBeginRedelegate',
     value: {
       amount: {
         amount: uatomAmount.toString(),

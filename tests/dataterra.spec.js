@@ -191,7 +191,7 @@ test('create delegate tx', async () => {
     expect(unsignedTx).toHaveProperty('value');
     expect(unsignedTx.value).toHaveProperty('memo', 'some message');
     expect(unsignedTx.value.msg).toHaveProperty('length', 1);
-    expect(unsignedTx.value.msg[0]).toHaveProperty('type', 'cosmos-sdk/MsgDelegate');
+    expect(unsignedTx.value.msg[0]).toHaveProperty('type', 'staking/MsgDelegate');
     expect(unsignedTx.value.msg[0].value).toHaveProperty('amount', { amount: '8765', denom: 'uluna' });
     expect(unsignedTx.value.msg[0].value).toHaveProperty('delegator_address', 'cosmos1k7ezdfu3j69npzhccs6m4hu99pydagsva0h0gp');
     expect(unsignedTx.value.msg[0].value).toHaveProperty('validator_address', 'cosmosvaloper1zyp0axz2t55lxkmgrvg4vpey2rf4ratcsud07t');
@@ -310,7 +310,7 @@ test('relay delegation tx', async () => {
     expect(postData.tx.signatures[0]).toHaveProperty('account_number', '20');
     expect(postData.tx.signatures[0]).toHaveProperty('sequence', '10');
     expect(postData.tx.signatures[0]).toHaveProperty('signature',
-        'qRvCMzUAZO3SQfbPX/wn4PyVvUb/UNF2tkBL05xIuTFOPOA0eszhM6KXEOpyatO+kOlXyaGr85npJLdddBEhjA==');
+        'PYdxlLh6nhOJ5eIEotIY1cZRrkNKe04Y82WlnKXvKv4Zdk4e8+wSzgtIrbhTGlCmMab+M/S5dOhhVyGcn9/EOw==');
     expect(postData.tx.signatures[0]).toHaveProperty('pub_key', {
         type: 'tendermint/PubKeySecp256k1',
         value: 'AoKE37ID2acC621g6nvPN7cJn2bTY6wCSpskmFm/t9w+',
@@ -410,7 +410,7 @@ test('relay redelegation tx', async () => {
     expect(postData.tx.signatures[0]).toHaveProperty('account_number', '20');
     expect(postData.tx.signatures[0]).toHaveProperty('sequence', '10');
     expect(postData.tx.signatures[0]).toHaveProperty('signature',
-        'krrAOwREMUbiG3nyVa+Takwjez8mIlt0FTVDRa1bHEkPL03LjIUvFj6MZhNuTR7YGjRrsHmN2yCe79/DKcqipA==');
+        'RGL8iQuKmpbEwRXF6TDYvvEV2NVeg2pGAHIyc5UN0m5Tb415PzqAg5edU3K8N45ZnVKyKjsRaSUlzg0hYHaKRA==');
     expect(postData.tx.signatures[0]).toHaveProperty('pub_key', {
         type: 'tendermint/PubKeySecp256k1',
         value: 'AoKE37ID2acC621g6nvPN7cJn2bTY6wCSpskmFm/t9w+',
@@ -505,7 +505,7 @@ test('relay undelegation tx', async () => {
     expect(postData.tx.signatures[0]).toHaveProperty('account_number', '20');
     expect(postData.tx.signatures[0]).toHaveProperty('sequence', '10');
     expect(postData.tx.signatures[0]).toHaveProperty('signature',
-        'BvdFPOPWeanSTRnGacU9JM82PCU4QToRy57vvbIiaUFRCu0XCyLVR3OYgpb/nvSWNj5iirKr78EZd94HLxTsHg==');
+        'yg26mAzJN1jZL7v2cRgdCqKKgQVvhq9ZnlafosWFhqMiMOpQH2TP6JfpAcPZUo1km92S4/b3jp9GRfLFP9/e/A==');
     expect(postData.tx.signatures[0]).toHaveProperty('pub_key', {
         type: 'tendermint/PubKeySecp256k1',
         value: 'AoKE37ID2acC621g6nvPN7cJn2bTY6wCSpskmFm/t9w+',
