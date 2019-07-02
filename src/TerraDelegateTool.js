@@ -78,6 +78,16 @@ const TerraDelegateTool = function (transport) {
 };
 
 // eslint-disable-next-line no-unused-vars
+TerraDelegateTool.prototype.getHrp = function () {
+    return this.hrp;
+};
+
+// eslint-disable-next-line no-unused-vars
+TerraDelegateTool.prototype.getDefaultDenom = function () {
+    return tsxterra.DEFAULT_DENOM;
+};
+
+// eslint-disable-next-line no-unused-vars
 TerraDelegateTool.prototype.setNodeURL = function (resturl) {
     this.resturl = resturl;
 };
@@ -156,7 +166,7 @@ TerraDelegateTool.prototype.sign = async function (unsignedTx, txContext) {
 TerraDelegateTool.prototype.retrieveAddress = async function (account, index) {
     connectedOrThrow(this);
 
-    const path = [44, 118, account, 0, index];
+    const path = [44, 330, account, 0, index];
     const pk = await this.app.publicKey(path);
 
     if (pk.return_code !== 0x9000) {

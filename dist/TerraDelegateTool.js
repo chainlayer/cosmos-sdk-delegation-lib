@@ -91,6 +91,16 @@ var TerraDelegateTool = function TerraDelegateTool(transport) {
 }; // eslint-disable-next-line no-unused-vars
 
 
+TerraDelegateTool.prototype.getHrp = function () {
+  return this.hrp;
+}; // eslint-disable-next-line no-unused-vars
+
+
+TerraDelegateTool.prototype.getDefaultDenom = function () {
+  return _terra["default"].DEFAULT_DENOM;
+}; // eslint-disable-next-line no-unused-vars
+
+
 TerraDelegateTool.prototype.setNodeURL = function (resturl) {
   this.resturl = resturl;
 }; // eslint-disable-next-line no-unused-vars
@@ -254,7 +264,7 @@ function () {
         switch (_context3.prev = _context3.next) {
           case 0:
             connectedOrThrow(this);
-            path = [44, 118, account, 0, index];
+            path = [44, 330, account, 0, index];
             _context3.next = 4;
             return this.app.publicKey(path);
 
