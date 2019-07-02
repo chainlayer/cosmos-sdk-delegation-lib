@@ -92,12 +92,12 @@ var TerraDelegateTool = function TerraDelegateTool(transport) {
 
 
 TerraDelegateTool.prototype.getHrp = function () {
-  return this.hrp;
+  return defaultHrp;
 }; // eslint-disable-next-line no-unused-vars
 
 
 TerraDelegateTool.prototype.getDefaultDenom = function () {
-  return _terra["default"].DEFAULT_DENOM;
+  return 'uluna';
 }; // eslint-disable-next-line no-unused-vars
 
 
@@ -264,7 +264,7 @@ function () {
         switch (_context3.prev = _context3.next) {
           case 0:
             connectedOrThrow(this);
-            path = [44, 330, account, 0, index];
+            path = [44, 118, account, 0, index];
             _context3.next = 4;
             return this.app.publicKey(path);
 
