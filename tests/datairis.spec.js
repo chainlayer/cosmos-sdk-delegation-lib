@@ -569,6 +569,5 @@ test('get price', async () => {
 
     const cdt = new IrisDelegateTool();
     const status = await cdt.getPrice();
-    console.log(status)
     expect(status).toBe(0.05827);
 });

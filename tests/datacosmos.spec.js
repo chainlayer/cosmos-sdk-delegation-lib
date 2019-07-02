@@ -558,3 +558,17 @@ test('get tx status - known', async () => {
     expect(status).toHaveProperty('gas_used', '89709');
     expect(status).toHaveProperty('timestamp', '2019-05-10T20:28:07Z');
 });
+
+test('get price', async () => {
+    const mock = new MockAdapter(axios);
+    mock.onGet('https://min-api.cryptocompare.com/data/price?fsym=ATOM&tsyms=USD').reply(
+        200,
+        {
+            USD: 5.407
+        },
+    );
+
+    const cdt = new CosmosDelegateTool();
+    const status = await cdt.getPrice();
+    expect(status).toBe(5.407);
+});

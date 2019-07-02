@@ -198,6 +198,13 @@ TerraDelegateTool.prototype.scanAddresses = async function (minAccount, maxAccou
     return answer;
 };
 
+TerraDelegateTool.prototype.getPrice = async function () {
+    const url = `https://api.coingecko.com/api/v3/coins/luna/tickers`;
+    return axios.get(url).then((r) => {
+        return r.data.tickers[0].converted_last.usd;
+    }, e => wrapError(this, e));
+};
+
 TerraDelegateTool.prototype.retrieveValidators = async function () {
     const url = `${nodeURL(this)}/staking/validators`;
     return axios.get(url).then((r) => {

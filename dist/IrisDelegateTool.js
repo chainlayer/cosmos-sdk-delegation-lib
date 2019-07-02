@@ -18,8 +18,6 @@ var _axios = _interopRequireDefault(require("axios"));
 
 var _big = _interopRequireDefault(require("big.js"));
 
-var _CosmosDelegateTool = require("./CosmosDelegateTool");
-
 /** ******************************************************************************
  *  (c) 2019 ChainLayer
  *

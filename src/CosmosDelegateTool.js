@@ -198,6 +198,13 @@ CosmosDelegateTool.prototype.scanAddresses = async function (minAccount, maxAcco
     return answer;
 };
 
+CosmosDelegateTool.prototype.getPrice = async function () {
+    const url = `https://min-api.cryptocompare.com/data/price?fsym=ATOM&tsyms=USD`;
+    return axios.get(url).then((r) => {
+        return r.data.USD;
+    }, e => wrapError(this, e));
+};
+
 CosmosDelegateTool.prototype.retrieveValidators = async function () {
     const url = `${nodeURL(this)}/staking/validators`;
     return axios.get(url).then((r) => {

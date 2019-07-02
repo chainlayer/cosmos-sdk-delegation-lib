@@ -18,7 +18,6 @@ import txsiris from "./iris";
 import secp256k1 from "secp256k1";
 import axios from "axios";
 import Big from "big.js";
-import {CosmosDelegateTool} from "./CosmosDelegateTool";
 
 Big.PE = 30;
 const defaultHrp = 'iaa';

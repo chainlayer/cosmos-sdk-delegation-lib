@@ -558,3 +558,15 @@ test('get tx status - known', async () => {
     expect(status).toHaveProperty('gas_used', '89709');
     expect(status).toHaveProperty('timestamp', '2019-05-10T20:28:07Z');
 });
+
+test('get price', async () => {
+    const mock = new MockAdapter(axios);
+    mock.onGet('https://api.coingecko.com/api/v3/coins/luna/tickers').reply(
+        200,
+        {"name":"Luna","tickers":[{"base":"LUNA","target":"KRW","market":{"name":"Coinone","identifier":"coinone","has_trading_incentive":false},"last":1803.0,"volume":128678.9448,"converted_last":{"btc":0.00014263,"eth":0.0053233,"usd":1.54},"converted_volume":{"btc":18.353474,"eth":684.996,"usd":198678},"trust_score":"green","bid_ask_spread_percentage":0.332042,"timestamp":"2019-07-02T19:56:29+00:00","last_traded_at":"2019-07-02T19:56:29+00:00","last_fetch_at":"2019-07-02T19:56:29+00:00","is_anomaly":false,"is_stale":false,"trade_url":"https://coinone.co.kr/exchange/trade/luna/krw","coin_id":"luna"},{"base":"LUNA","target":"KRW","market":{"name":"GDAC","identifier":"gdac","has_trading_incentive":false},"last":1790.0,"volume":6077.13901336,"converted_last":{"btc":0.00014401,"eth":0.0053322,"usd":1.53},"converted_volume":{"btc":0.87514204,"eth":32.404525,"usd":9315.58},"trust_score":null,"bid_ask_spread_percentage":null,"timestamp":"2019-07-02T18:54:22+00:00","last_traded_at":"2019-07-02T18:54:22+00:00","last_fetch_at":"2019-07-02T19:54:36+00:00","is_anomaly":false,"is_stale":false,"trade_url":null,"coin_id":"luna"}]},
+    );
+
+    const cdt = new TerraDelegateTool();
+    const status = await cdt.getPrice();
+    expect(status).toBe(1.54);
+});
