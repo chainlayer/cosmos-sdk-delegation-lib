@@ -58,7 +58,7 @@ test('get account info - parsing', async () => {
 
     const addr = { bech32: 'someaddress' };
     const answer = await cdt.getAccountInfo(addr);
-    console.log(answer)
+    // console.log(answer)
     expect(answer).toHaveProperty('sequence', '10');
     expect(answer).toHaveProperty('accountNumber', '20');
     expect(answer).toHaveProperty('balance', '15');

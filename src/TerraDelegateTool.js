@@ -15,7 +15,7 @@
  *  limitations under the License.
  ******************************************************************************* */
 import CosmosApp, {getBech32FromPK} from "ledger-cosmos-js";
-import tsxterra from "./terra";
+import txsterra from "./terra";
 import secp256k1 from "secp256k1";
 import axios from "axios";
 import Big from "big.js";
@@ -147,7 +147,7 @@ TerraDelegateTool.prototype.sign = async function (unsignedTx, txContext) {
         throw new Error('context should include the account path');
     }
 
-    const bytesToSign = tsxterra.getBytesToSign(unsignedTx, txContext);
+    const bytesToSign = txsterra.getBytesToSign(unsignedTx, txContext);
     console.log(bytesToSign);
 
     const response = await this.app.sign(txContext.path, bytesToSign);
@@ -159,7 +159,7 @@ TerraDelegateTool.prototype.sign = async function (unsignedTx, txContext) {
 
     const sig = secp256k1.signatureImport(response.signature);
 
-    return tsxterra.applySignature(unsignedTx, txContext, sig);
+    return txsterra.applySignature(unsignedTx, txContext, sig);
 };
 
 // Retrieve public key and bech32 address
@@ -229,7 +229,7 @@ TerraDelegateTool.prototype.getAccountInfo = async function (addr) {
                 txContext.accountNumber = Number(r.data.value.account_number).toString();
 
                 if (r.data.value.coins !== null) {
-                    const tmp = r.data.value.coins.filter(x => x.denom === tsxterra.DEFAULT_DENOM);
+                    const tmp = r.data.value.coins.filter(x => x.denom === txsterra.DEFAULT_DENOM);
                     if (tmp.length > 0) {
                         txContext.balance = Big(tmp[0].amount).toString();
                     }
@@ -333,7 +333,7 @@ TerraDelegateTool.prototype.txCreateDelegate = async function (
     // eslint-disable-next-line no-param-reassign
     txContext.sequence = accountInfo.sequence;
 
-    return tsxterra.createDelegate(
+    return txsterra.createDelegate(
         txContext,
         validatorBech32,
         Big(uatomAmount),
@@ -364,7 +364,7 @@ TerraDelegateTool.prototype.txCreateRedelegate = async function (
     txContext.sequence = accountInfo.sequence;
 
     // Convert from uatoms to shares
-    return tsxterra.createRedelegate(
+    return txsterra.createRedelegate(
         txContext,
         validatorSourceBech32,
         validatorDestBech32,
@@ -395,7 +395,7 @@ TerraDelegateTool.prototype.txCreateUndelegate = async function (
     // eslint-disable-next-line no-param-reassign
     txContext.sequence = accountInfo.sequence;
 
-    return tsxterra.createUndelegate(
+    return txsterra.createUndelegate(
         txContext,
         validatorBech32,
         uatomAmount,
