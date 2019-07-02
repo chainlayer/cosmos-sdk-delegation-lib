@@ -24,6 +24,7 @@ import txscosmos from './cosmos';
 
 const defaultHrpIris = 'iaa';
 const defaultHrpCosmos = 'cosmos';
+
 Big.PE = 30;
 
 function wrapError(cdt, e) {
@@ -77,11 +78,17 @@ const CosmosDelegateTool = function (transport) {
 
     this.requiredVersionMajor = 1;
     this.requiredVersionMinor = 1;
+    this.hrp = defaultHrpCosmos;
 };
 
 // eslint-disable-next-line no-unused-vars
 CosmosDelegateTool.prototype.setNodeURL = function (resturl) {
     this.resturl = resturl;
+};
+
+// eslint-disable-next-line no-unused-vars
+CosmosDelegateTool.prototype.setHrp = function (hrp) {
+    this.hrp = hrp;
 };
 
 // Detect when a ledger device is connected and verify the cosmos app is running.
@@ -164,7 +171,7 @@ CosmosDelegateTool.prototype.retrieveAddress = async function (account, index) {
     return {
         pk: pk.compressed_pk.toString('hex'),
         path,
-        bech32: getBech32FromPK(defaultHrpCosmos, pk.compressed_pk),
+        bech32: getBech32FromPK(this.hrp, pk.compressed_pk),
     };
 };
 
@@ -420,12 +427,19 @@ const IrisDelegateTool = function (transport) {
 
     this.requiredVersionMajor = 1;
     this.requiredVersionMinor = 1;
+    this.hrp = defaultHrpIris;
 };
 
 // eslint-disable-next-line no-unused-vars
 IrisDelegateTool.prototype.setNodeURL = function (resturl) {
     this.resturl = resturl;
 };
+
+// eslint-disable-next-line no-unused-vars
+CosmosDelegateTool.prototype.setHrp = function (hrp) {
+    this.hrp = hrp;
+};
+
 
 // Detect when a ledger device is connected and verify the cosmos app is running.
 IrisDelegateTool.prototype.connect = async function () {
@@ -507,7 +521,7 @@ IrisDelegateTool.prototype.retrieveAddress = async function (account, index) {
     return {
         pk: pk.compressed_pk.toString('hex'),
         path,
-        bech32: getBech32FromPK(defaultHrpIris, pk.compressed_pk),
+        bech32: getBech32FromPK(this.hrp, pk.compressed_pk),
     };
 };
 
