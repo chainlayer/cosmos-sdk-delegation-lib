@@ -407,7 +407,7 @@ function () {
             txContext = {
               sequence: '0',
               accountNumber: '0',
-              balanceirisatta: '0'
+              balance: '0'
             };
             return _context6.abrupt("return", _axios["default"].get(url).then(function (r) {
               try {
@@ -421,7 +421,7 @@ function () {
                     });
 
                     if (tmp.length > 0) {
-                      txContext.balanceirisatta = (0, _big["default"])(tmp[0].amount).toString();
+                      txContext.balance = (0, _big["default"])(tmp[0].amount).toString();
                     }
                   }
                 }
@@ -464,7 +464,7 @@ function () {
             return _context7.abrupt("return", _axios["default"].get(url).then(function (r) {
               var txContext = {
                 delegations: {},
-                delegationsTotaluAtoms: '0'
+                delegationsTotal: '0'
               };
               var delegations = {};
               var totalDelegation = (0, _big["default"])(0);
@@ -494,7 +494,7 @@ function () {
               }
 
               txContext.delegations = delegations;
-              txContext.delegationsTotaluAtoms = totalDelegation.toString();
+              txContext.delegationsTotal = totalDelegation.toString();
               return txContext;
             }, function (e) {
               return wrapError(_this3, e);
@@ -638,7 +638,7 @@ function () {
             txContext.accountNumber = accountInfo.accountNumber; // eslint-disable-next-line no-param-reassign
 
             txContext.sequence = accountInfo.sequence;
-            return _context10.abrupt("return", _iris["default"].createDelegate(txContext, validatorBech32, (0, _big["default"])(uatomAmount * 1000000000000000000), memo));
+            return _context10.abrupt("return", _iris["default"].createDelegate(txContext, validatorBech32, (0, _big["default"])(uatomAmount * 1000000000), memo));
 
           case 10:
           case "end":
