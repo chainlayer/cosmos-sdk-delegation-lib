@@ -97,7 +97,7 @@ TerraDelegateTool.prototype.getHrp = function () {
 
 
 TerraDelegateTool.prototype.getDefaultDenom = function () {
-  return 'uluna';
+  return txsterra.DEFAULT_DENOM; // 'uluna'
 }; // eslint-disable-next-line no-unused-vars
 
 

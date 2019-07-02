@@ -91,6 +91,16 @@ var CosmosDelegateTool = function CosmosDelegateTool(transport) {
 }; // eslint-disable-next-line no-unused-vars
 
 
+CosmosDelegateTool.prototype.getHrp = function () {
+  return defaultHrp;
+}; // eslint-disable-next-line no-unused-vars
+
+
+CosmosDelegateTool.prototype.getDefaultDenom = function () {
+  return _cosmos["default"].DEFAULT_DENOM; // 'uatom'
+}; // eslint-disable-next-line no-unused-vars
+
+
 CosmosDelegateTool.prototype.setNodeURL = function (resturl) {
   this.resturl = resturl;
 }; // eslint-disable-next-line no-unused-vars

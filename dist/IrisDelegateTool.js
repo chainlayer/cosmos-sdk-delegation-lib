@@ -92,6 +92,16 @@ var IrisDelegateTool = function IrisDelegateTool(transport) {
 }; // eslint-disable-next-line no-unused-vars
 
 
+IrisDelegateTool.prototype.getHrp = function () {
+  return defaultHrp;
+}; // eslint-disable-next-line no-unused-vars
+
+
+IrisDelegateTool.prototype.getDefaultDenom = function () {
+  return _iris["default"].DEFAULT_DENOM; // 'iris-atto'
+}; // eslint-disable-next-line no-unused-vars
+
+
 IrisDelegateTool.prototype.setNodeURL = function (resturl) {
   this.resturl = resturl;
 }; // eslint-disable-next-line no-unused-vars
