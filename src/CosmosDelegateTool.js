@@ -410,6 +410,30 @@ CosmosDelegateTool.prototype.txCreateUndelegate = async function (
     );
 };
 
+// Creates a new withdrawl tx based on the input parameters
+CosmosDelegateTool.prototype.txCreateWithdrawl = async function (
+    txContext,
+    memo,
+) {
+    if (typeof txContext === 'undefined') {
+        throw new Error('undefined txContext');
+    }
+    if (typeof txContext.bech32 === 'undefined') {
+        throw new Error('txContext does not contain the source address (bech32)');
+    }
+
+    const accountInfo = await this.getAccountInfo(txContext);
+    // eslint-disable-next-line no-param-reassign
+    txContext.accountNumber = accountInfo.accountNumber;
+    // eslint-disable-next-line no-param-reassign
+    txContext.sequence = accountInfo.sequence;
+
+    return txscosmos.createDelegate(
+        txContext,
+        memo,
+    );
+}
+
 // Relays a signed transaction and returns a transaction hash
 CosmosDelegateTool.prototype.txSubmit = async function (signedTx) {
     const txBody = {
