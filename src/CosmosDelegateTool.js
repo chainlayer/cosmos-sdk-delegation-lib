@@ -319,6 +319,24 @@ CosmosDelegateTool.prototype.retrieveBalances = async function (addressList) {
     return reply;
 };
 
+// Retrieve atom rewards from the network for an account and validator
+CosmosDelegateTool.prototype.getRewards = async function (validator, addr) {
+    const url = `${nodeURL(this)}/distribution/delegators/${addr.bech32}/rewards/${validator}`;
+    return axios.get(url).then((r) => {
+        let reward = Big(0);
+
+        try {
+            if (typeof r.data[0].amount !== 'undefined' && r.data !== null) {
+                reward = r.data[0].amount;
+            }
+        } catch (e) {
+            console.log('Error ', e, ' returning defaults');
+        }
+
+        return reward;
+    }, e => wrapError(this, e));
+};
+
 // Creates a new delegation tx based on the input parameters
 // this function expect that retrieve balances has been called before
 CosmosDelegateTool.prototype.txCreateDelegate = async function (
