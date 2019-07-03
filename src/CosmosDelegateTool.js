@@ -413,6 +413,7 @@ CosmosDelegateTool.prototype.txCreateUndelegate = async function (
 // Creates a new withdrawl tx based on the input parameters
 CosmosDelegateTool.prototype.txCreateWithdrawl = async function (
     txContext,
+    validatorBech32,
     memo,
 ) {
     if (typeof txContext === 'undefined') {
@@ -430,6 +431,7 @@ CosmosDelegateTool.prototype.txCreateWithdrawl = async function (
 
     return txscosmos.createWithdrawl(
         txContext,
+        validatorBech32,
         memo,
     );
 }

@@ -801,7 +801,7 @@ CosmosDelegateTool.prototype.txCreateWithdrawl =
 function () {
   var _ref14 = (0, _asyncToGenerator2["default"])(
   /*#__PURE__*/
-  _regenerator["default"].mark(function _callee14(txContext, memo) {
+  _regenerator["default"].mark(function _callee14(txContext, validatorBech32, memo) {
     var accountInfo;
     return _regenerator["default"].wrap(function _callee14$(_context14) {
       while (1) {
@@ -832,7 +832,7 @@ function () {
             txContext.accountNumber = accountInfo.accountNumber; // eslint-disable-next-line no-param-reassign
 
             txContext.sequence = accountInfo.sequence;
-            return _context14.abrupt("return", _cosmos["default"].createWithdrawl(txContext, memo));
+            return _context14.abrupt("return", _cosmos["default"].createWithdrawl(txContext, validatorBech32, memo));
 
           case 10:
           case "end":
@@ -842,7 +842,7 @@ function () {
     }, _callee14, this);
   }));
 
-  return function (_x28, _x29) {
+  return function (_x28, _x29, _x30) {
     return _ref14.apply(this, arguments);
   };
 }(); // Relays a signed transaction and returns a transaction hash
@@ -880,7 +880,7 @@ function () {
     }, _callee15, this);
   }));
 
-  return function (_x30) {
+  return function (_x31) {
     return _ref15.apply(this, arguments);
   };
 }(); // Retrieve the status of a transaction hash
@@ -914,7 +914,7 @@ function () {
     }, _callee16, this);
   }));
 
-  return function (_x31) {
+  return function (_x32) {
     return _ref16.apply(this, arguments);
   };
 }();
