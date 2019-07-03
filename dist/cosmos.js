@@ -243,6 +243,7 @@ var _default = {
   createDelegate: createDelegate,
   createRedelegate: createRedelegate,
   createUndelegate: createUndelegate,
+  createWithdrawl: createWithdrawl,
   getBytesToSign: getBytesToSign,
   applySignature: applySignature
 };

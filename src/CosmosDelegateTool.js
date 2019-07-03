@@ -428,7 +428,7 @@ CosmosDelegateTool.prototype.txCreateWithdrawl = async function (
     // eslint-disable-next-line no-param-reassign
     txContext.sequence = accountInfo.sequence;
 
-    return txscosmos.createDelegate(
+    return txscosmos.createWithdrawl(
         txContext,
         memo,
     );

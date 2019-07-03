@@ -257,6 +257,7 @@ export default {
     createDelegate,
     createRedelegate,
     createUndelegate,
+    createWithdrawl,
     getBytesToSign,
     applySignature,
 };
