@@ -223,6 +223,18 @@ function createRedelegate(txContext, validatorSourceBech32, validatorDestBech32,
   txSkeleton.value.msg = [txMsg];
   txSkeleton.value.memo = memo || '';
   return txSkeleton;
+} // Creates a new withdrawl tx based on the input parameters
+// the function expects a complete txContext
+
+
+function createWithdrawl(txContext, memo) {
+  var txSkeleton = createSkeleton(txContext);
+  var txMsg = {
+    type: 'cosmos-sdk/MsgWithdrawDelegationRewardsAll'
+  };
+  txSkeleton.value.msg = [txMsg];
+  txSkeleton.value.memo = memo || '';
+  return txSkeleton;
 }
 
 var _default = {
