@@ -672,7 +672,7 @@ function () {
             txContext.accountNumber = accountInfo.accountNumber; // eslint-disable-next-line no-param-reassign
 
             txContext.sequence = accountInfo.sequence;
-            return _context11.abrupt("return", _iris["default"].createDelegate(txContext, validatorBech32, (0, _big["default"])(uatomAmount * 1000000000), memo));
+            return _context11.abrupt("return", _iris["default"].createDelegate(txContext, validatorBech32, (0, _big["default"])(uatomAmount), memo));
 
           case 10:
           case "end":
@@ -726,7 +726,7 @@ function () {
 
             txContext.sequence = accountInfo.sequence; // Convert from uatoms to shares
 
-            return _context12.abrupt("return", _iris["default"].createRedelegate(txContext, validatorSourceBech32, validatorDestBech32, (0, _big["default"])(uatomAmount * 1000000000000000000), memo));
+            return _context12.abrupt("return", _iris["default"].createRedelegate(txContext, validatorSourceBech32, validatorDestBech32, (0, _big["default"])(uatomAmount), memo));
 
           case 10:
           case "end":
@@ -779,7 +779,7 @@ function () {
             txContext.accountNumber = accountInfo.accountNumber; // eslint-disable-next-line no-param-reassign
 
             txContext.sequence = accountInfo.sequence;
-            return _context13.abrupt("return", _iris["default"].createUndelegate(txContext, validatorBech32, (0, _big["default"])(uatomAmount * 1000000000000000000), memo));
+            return _context13.abrupt("return", _iris["default"].createUndelegate(txContext, validatorBech32, (0, _big["default"])(uatomAmount), memo));
 
           case 10:
           case "end":

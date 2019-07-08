@@ -343,7 +343,7 @@ IrisDelegateTool.prototype.txCreateDelegate = async function (
     return txsiris.createDelegate(
         txContext,
         validatorBech32,
-        Big(uatomAmount*1000000000),
+        Big(uatomAmount),
         memo,
     );
 }
@@ -375,7 +375,7 @@ IrisDelegateTool.prototype.txCreateRedelegate = async function (
         txContext,
         validatorSourceBech32,
         validatorDestBech32,
-        Big(uatomAmount*1000000000000000000),
+        Big(uatomAmount),
         memo,
     );
 };
@@ -405,7 +405,7 @@ IrisDelegateTool.prototype.txCreateUndelegate = async function (
     return txsiris.createUndelegate(
         txContext,
         validatorBech32,
-        Big(uatomAmount*1000000000000000000),
+        Big(uatomAmount),
         memo,
     );
 };
