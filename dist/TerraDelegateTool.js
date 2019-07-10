@@ -259,14 +259,14 @@ TerraDelegateTool.prototype.retrieveAddress =
 function () {
   var _ref3 = (0, _asyncToGenerator2["default"])(
   /*#__PURE__*/
-  _regenerator["default"].mark(function _callee3(account, index) {
+  _regenerator["default"].mark(function _callee3(network, account, change, index) {
     var path, pk;
     return _regenerator["default"].wrap(function _callee3$(_context3) {
       while (1) {
         switch (_context3.prev = _context3.next) {
           case 0:
             connectedOrThrow(this);
-            path = [44, 118, account, 0, index];
+            path = [44, network, account, change, index];
             _context3.next = 4;
             return this.app.publicKey(path);
 
@@ -296,7 +296,7 @@ function () {
     }, _callee3, this);
   }));
 
-  return function (_x3, _x4) {
+  return function (_x3, _x4, _x5, _x6) {
     return _ref3.apply(this, arguments);
   };
 }(); // Scan multiple address in a derivation path range (44’/118’/X/0/Y)
@@ -359,7 +359,7 @@ function () {
     }, _callee4, this);
   }));
 
-  return function (_x5, _x6, _x7, _x8) {
+  return function (_x7, _x8, _x9, _x10) {
     return _ref4.apply(this, arguments);
   };
 }();
@@ -479,7 +479,7 @@ function () {
     }, _callee7, this);
   }));
 
-  return function (_x9) {
+  return function (_x11) {
     return _ref7.apply(this, arguments);
   };
 }();
@@ -545,7 +545,7 @@ function () {
     }, _callee8, this);
   }));
 
-  return function (_x10, _x11) {
+  return function (_x12, _x13) {
     return _ref8.apply(this, arguments);
   };
 }(); // Retrieve atom balances from the network for a list of account
@@ -597,7 +597,7 @@ function () {
                 }, _callee9);
               }));
 
-              return function (_x13, _x14) {
+              return function (_x15, _x16) {
                 return _ref10.apply(this, arguments);
               };
             }()); // eslint-disable-next-line max-len,no-unused-vars
@@ -632,7 +632,7 @@ function () {
     }, _callee10, this);
   }));
 
-  return function (_x12) {
+  return function (_x14) {
     return _ref9.apply(this, arguments);
   };
 }(); // Retrieve atom rewards from the network for an account and validator
@@ -676,7 +676,7 @@ function () {
     }, _callee11, this);
   }));
 
-  return function (_x15, _x16) {
+  return function (_x17, _x18) {
     return _ref11.apply(this, arguments);
   };
 }(); // Creates a new delegation tx based on the input parameters
@@ -729,7 +729,7 @@ function () {
     }, _callee12, this);
   }));
 
-  return function (_x17, _x18, _x19, _x20) {
+  return function (_x19, _x20, _x21, _x22) {
     return _ref12.apply(this, arguments);
   };
 }(); // Creates a new staking tx based on the input parameters
@@ -783,7 +783,7 @@ function () {
     }, _callee13, this);
   }));
 
-  return function (_x21, _x22, _x23, _x24, _x25) {
+  return function (_x23, _x24, _x25, _x26, _x27) {
     return _ref13.apply(this, arguments);
   };
 }(); // Creates a new undelegation tx based on the input parameters
@@ -836,7 +836,7 @@ function () {
     }, _callee14, this);
   }));
 
-  return function (_x26, _x27, _x28, _x29) {
+  return function (_x28, _x29, _x30, _x31) {
     return _ref14.apply(this, arguments);
   };
 }(); // Creates a new withdrawl tx based on the input parameters
@@ -888,7 +888,7 @@ function () {
     }, _callee15, this);
   }));
 
-  return function (_x30, _x31, _x32) {
+  return function (_x32, _x33, _x34) {
     return _ref15.apply(this, arguments);
   };
 }(); // Relays a signed transaction and returns a transaction hash
@@ -926,7 +926,7 @@ function () {
     }, _callee16, this);
   }));
 
-  return function (_x33) {
+  return function (_x35) {
     return _ref16.apply(this, arguments);
   };
 }(); // Retrieve the status of a transaction hash
@@ -960,7 +960,7 @@ function () {
     }, _callee17, this);
   }));
 
-  return function (_x34) {
+  return function (_x36) {
     return _ref17.apply(this, arguments);
   };
 }();

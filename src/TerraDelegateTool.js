@@ -164,10 +164,10 @@ TerraDelegateTool.prototype.sign = async function (unsignedTx, txContext) {
 };
 
 // Retrieve public key and bech32 address
-TerraDelegateTool.prototype.retrieveAddress = async function (account, index) {
+TerraDelegateTool.prototype.retrieveAddress = async function (network, account, change, index) {
     connectedOrThrow(this);
 
-    const path = [44, 118, account, 0, index];
+    const path = [44, network, account, change, index];
     const pk = await this.app.publicKey(path);
 
     if (pk.return_code !== 0x9000) {

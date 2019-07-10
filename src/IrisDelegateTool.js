@@ -164,10 +164,10 @@ IrisDelegateTool.prototype.sign = async function (unsignedTx, txContext) {
 };
 
 // Retrieve public key and bech32 address
-IrisDelegateTool.prototype.retrieveAddress = async function (account, index) {
+IrisDelegateTool.prototype.retrieveAddress = async function (network, account, change, index) {
     connectedOrThrow(this);
 
-    const path = [44, 118, account, 0, index];
+    const path = [44, network, account, change, index];
     const pk = await this.app.publicKey(path);
 
     if (pk.return_code !== 0x9000) {
@@ -327,8 +327,8 @@ IrisDelegateTool.prototype.getRewards = async function (addr) {
         let reward = Big(0);
 
         try {
-            if (typeof r.data[0].amount !== 'undefined' && r.data !== null) {
-                reward = r.data[0].amount;
+            if (typeof r.data[0].total[0] !== 'undefined' && r.data !== null) {
+                reward = r.data[0].total[0].amount;
             }
         } catch (e) {
             console.log('Error ', e, ' returning defaults');

@@ -577,13 +577,29 @@ test('get reward', async () => {
     mock.onGet('mockNode/distribution/cosmos1zwp97t7kx6sgk5yz6ad9ajqyndd8lv0mw6xpxh/rewards').reply(
         200,
         [{
-            denom: "uatom",
-            amount: "520951.658454596734722882"
+            "total": [
+                {
+                    "denom": "iris-atto",
+                    "amount": "23653055294711090028"
+                }
+            ],
+            "delegations": [
+                {
+                    "validator": "iva1kgddca7qj96z0qcxr2c45z73cfl0c75pmw0meu",
+                    "reward": [
+                        {
+                            "denom": "iris-atto",
+                            "amount": "23653055294711090028"
+                        }
+                    ]
+                }
+            ],
+            "commission": null
         }],
     );
 
     const cdt = new IrisDelegateTool();
     cdt.setNodeURL('mockNode');
     const status = await cdt.getRewards({ bech32: 'cosmos1zwp97t7kx6sgk5yz6ad9ajqyndd8lv0mw6xpxh' });
-    expect(status).toBe("520951.658454596734722882");
+    expect(status).toBe("23653055294711090028");
 });
