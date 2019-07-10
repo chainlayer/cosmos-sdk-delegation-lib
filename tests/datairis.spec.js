@@ -191,7 +191,7 @@ test('create delegate tx', async () => {
     expect(unsignedTx.value).toHaveProperty('memo', 'some message');
     expect(unsignedTx.value.msg).toHaveProperty('length', 1);
     expect(unsignedTx.value.msg[0]).toHaveProperty('type', 'irishub/stake/MsgDelegate');
-    expect(unsignedTx.value.msg[0].value).toHaveProperty('delegation', { amount: '8765000000000', denom: 'iris-atto' });
+    expect(unsignedTx.value.msg[0].value).toHaveProperty('delegation', { amount: '8765', denom: 'iris-atto' });
     expect(unsignedTx.value.msg[0].value).toHaveProperty('delegator_addr', 'cosmos1k7ezdfu3j69npzhccs6m4hu99pydagsva0h0gp');
     expect(unsignedTx.value.msg[0].value).toHaveProperty('validator_addr', 'cosmosvaloper1zyp0axz2t55lxkmgrvg4vpey2rf4ratcsud07t');
 });
@@ -309,7 +309,7 @@ test('relay delegation tx', async () => {
     expect(postData.tx.signatures[0]).toHaveProperty('account_number', '20');
     expect(postData.tx.signatures[0]).toHaveProperty('sequence', '10');
     expect(postData.tx.signatures[0]).toHaveProperty('signature',
-        'iuLPCAv9u47Ss9InOdXkbYwKDlwvAgqOUOqZf9aWIcMf5pogSIlcIsG2zCVnfEZFj5Vaqt9xWiuLIZGaqk7nPQ==');
+        'GMYdmuftSHQPQjqV3Ka3FleS+n0N/fEpE5lW5/Jq7AxvXoKEGZecI9CQeJixuoRBjlKOPHZ8FlfASw0pBoCplQ==');
     expect(postData.tx.signatures[0]).toHaveProperty('pub_key', {
         type: 'tendermint/PubKeySecp256k1',
         value: 'AoKE37ID2acC621g6nvPN7cJn2bTY6wCSpskmFm/t9w+',
@@ -362,7 +362,7 @@ test('relay redelegation tx', async () => {
     );
 
     // Check uatom to shares conversion
-    expect(unsignedTx.value.msg[0].value.delegation).toEqual({ amount: '1000000000000000000000', denom: 'iris-atto' });
+    expect(unsignedTx.value.msg[0].value.delegation).toEqual({ amount: '1000', denom: 'iris-atto' });
 
     // Sign locally using mnemonic
     const mnemonic = 'table artist summer collect crack cruel '
@@ -409,7 +409,7 @@ test('relay redelegation tx', async () => {
     expect(postData.tx.signatures[0]).toHaveProperty('account_number', '20');
     expect(postData.tx.signatures[0]).toHaveProperty('sequence', '10');
     expect(postData.tx.signatures[0]).toHaveProperty('signature',
-        'e1Lg8sLqlHvBPOYxtf2L2PbJGc+s3zVb2f7C2927jc9G9slR/5G6mJn9Tc7RiapiXXmt+eOUgMf9bnz4Lk/wxQ==');
+        'cQhkRmuj6J9bxfyCBJrbfuxjif4MBopwk7Aaaom2dRUfXxF1vuqAwltwm90OTL9TKGNjG0iztKUT+HkD8SUyIg==');
     expect(postData.tx.signatures[0]).toHaveProperty('pub_key', {
         type: 'tendermint/PubKeySecp256k1',
         value: 'AoKE37ID2acC621g6nvPN7cJn2bTY6wCSpskmFm/t9w+',
@@ -459,7 +459,7 @@ test('relay undelegation tx', async () => {
     );
 
     // Check uatom to shares conversion
-    expect(unsignedTx.value.msg[0].value.delegation).toEqual({ amount: '300000000000000000000', denom: 'iris-atto' });
+    expect(unsignedTx.value.msg[0].value.delegation).toEqual({ amount: '300', denom: 'iris-atto' });
 
     // Sign locally using mnemonic
     const mnemonic = 'table artist summer collect crack cruel '
@@ -504,7 +504,7 @@ test('relay undelegation tx', async () => {
     expect(postData.tx.signatures[0]).toHaveProperty('account_number', '20');
     expect(postData.tx.signatures[0]).toHaveProperty('sequence', '10');
     expect(postData.tx.signatures[0]).toHaveProperty('signature',
-        'CEO7pFx2vxdXNgnFJ3siuAKEBFhufcTAHlRLUjvatz5ZWXUKHC9PXmhZiXjUiWhAMgWKed7ZXfMd0YcQOAWkHQ==');
+        '4MvuLZTYmRkrhM/PWzGH59q8UZGLrtKO0mwnILyQfJwONTdvjtDU5GNYGO5mbDTCgbMkT93FZZGj0ePWNq6EPA==');
     expect(postData.tx.signatures[0]).toHaveProperty('pub_key', {
         type: 'tendermint/PubKeySecp256k1',
         value: 'AoKE37ID2acC621g6nvPN7cJn2bTY6wCSpskmFm/t9w+',
@@ -570,4 +570,20 @@ test('get price', async () => {
     const cdt = new IrisDelegateTool();
     const status = await cdt.getPrice();
     expect(status).toBe(0.05827);
+});
+
+test('get reward', async () => {
+    const mock = new MockAdapter(axios);
+    mock.onGet('mockNode/distribution/cosmos1zwp97t7kx6sgk5yz6ad9ajqyndd8lv0mw6xpxh/rewards').reply(
+        200,
+        [{
+            denom: "uatom",
+            amount: "520951.658454596734722882"
+        }],
+    );
+
+    const cdt = new IrisDelegateTool();
+    cdt.setNodeURL('mockNode');
+    const status = await cdt.getRewards({ bech32: 'cosmos1zwp97t7kx6sgk5yz6ad9ajqyndd8lv0mw6xpxh' });
+    expect(status).toBe("520951.658454596734722882");
 });

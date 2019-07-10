@@ -18,6 +18,7 @@ import txsiris from "./iris";
 import secp256k1 from "secp256k1";
 import axios from "axios";
 import Big from "big.js";
+import txscosmos from "./cosmos";
 
 Big.PE = 30;
 const defaultHrp = 'iaa';
@@ -319,6 +320,24 @@ IrisDelegateTool.prototype.retrieveBalances = async function (addressList) {
     return reply;
 };
 
+// Retrieve atom rewards from the network for an account and validator
+IrisDelegateTool.prototype.getRewards = async function (addr) {
+    const url = `${nodeURL(this)}/distribution/${addr.bech32}/rewards`;
+    return axios.get(url).then((r) => {
+        let reward = Big(0);
+
+        try {
+            if (typeof r.data[0].amount !== 'undefined' && r.data !== null) {
+                reward = r.data[0].amount;
+            }
+        } catch (e) {
+            console.log('Error ', e, ' returning defaults');
+        }
+
+        return reward;
+    }, e => wrapError(this, e));
+};
+
 // Creates a new delegation tx based on the input parameters
 // this function expect that retrieve balances has been called before
 IrisDelegateTool.prototype.txCreateDelegate = async function (
@@ -409,6 +428,30 @@ IrisDelegateTool.prototype.txCreateUndelegate = async function (
         memo,
     );
 };
+
+// Creates a new withdrawl tx based on the input parameters
+IrisDelegateTool.prototype.txCreateWithdrawl = async function (
+    txContext,
+    memo,
+) {
+    if (typeof txContext === 'undefined') {
+        throw new Error('undefined txContext');
+    }
+    if (typeof txContext.bech32 === 'undefined') {
+        throw new Error('txContext does not contain the source address (bech32)');
+    }
+
+    const accountInfo = await this.getAccountInfo(txContext);
+    // eslint-disable-next-line no-param-reassign
+    txContext.accountNumber = accountInfo.accountNumber;
+    // eslint-disable-next-line no-param-reassign
+    txContext.sequence = accountInfo.sequence;
+
+    return txsiris.createWithdrawl(
+        txContext,
+        memo,
+    );
+}
 
 // Relays a signed transaction and returns a transaction hash
 IrisDelegateTool.prototype.txSubmit = async function (signedTx) {

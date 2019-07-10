@@ -237,16 +237,14 @@ function createRedelegate(
 // the function expects a complete txContext
 function createWithdrawl(
     txContext,
-    validatorBech32,
     memo,
 ) {
     const txSkeleton = createSkeleton(txContext);
 
     const txMsg = {
-        type: 'cosmos-sdk/MsgWithdrawDelegationReward',
+        type: 'cosmos-sdk/MsgWithdrawDelegationRewardsAll',
         value: {
             delegator_address: txContext.bech32,
-            validator_address: validatorBech32,
         }
     };
 

@@ -570,3 +570,19 @@ test('get price', async () => {
     const status = await cdt.getPrice();
     expect(status).toBe(1.54);
 });
+
+test('get reward', async () => {
+    const mock = new MockAdapter(axios);
+    mock.onGet('mockNode/distribution/delegators/cosmos1zwp97t7kx6sgk5yz6ad9ajqyndd8lv0mw6xpxh/rewards/cosmosvaloper1kgddca7qj96z0qcxr2c45z73cfl0c75p7f3s2e').reply(
+        200,
+        [{
+            denom: "uatom",
+            amount: "520951.658454596734722882"
+        }],
+    );
+
+    const cdt = new TerraDelegateTool();
+    cdt.setNodeURL('mockNode');
+    const status = await cdt.getRewards('cosmosvaloper1kgddca7qj96z0qcxr2c45z73cfl0c75p7f3s2e', { bech32: 'cosmos1zwp97t7kx6sgk5yz6ad9ajqyndd8lv0mw6xpxh' });
+    expect(status).toBe("520951.658454596734722882");
+});

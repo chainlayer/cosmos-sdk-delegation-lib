@@ -320,8 +320,8 @@ CosmosDelegateTool.prototype.retrieveBalances = async function (addressList) {
 };
 
 // Retrieve atom rewards from the network for an account and validator
-CosmosDelegateTool.prototype.getRewards = async function (validator, addr) {
-    const url = `${nodeURL(this)}/distribution/delegators/${addr.bech32}/rewards/${validator}`;
+CosmosDelegateTool.prototype.getRewards = async function (addr) {
+    const url = `${nodeURL(this)}/distribution/delegators/${addr.bech32}/rewards`;
     return axios.get(url).then((r) => {
         let reward = Big(0);
 
@@ -431,7 +431,6 @@ CosmosDelegateTool.prototype.txCreateUndelegate = async function (
 // Creates a new withdrawl tx based on the input parameters
 CosmosDelegateTool.prototype.txCreateWithdrawl = async function (
     txContext,
-    validatorBech32,
     memo,
 ) {
     if (typeof txContext === 'undefined') {
@@ -449,7 +448,6 @@ CosmosDelegateTool.prototype.txCreateWithdrawl = async function (
 
     return txscosmos.createWithdrawl(
         txContext,
-        validatorBech32,
         memo,
     );
 }

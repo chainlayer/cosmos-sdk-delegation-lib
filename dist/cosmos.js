@@ -227,13 +227,12 @@ function createRedelegate(txContext, validatorSourceBech32, validatorDestBech32,
 // the function expects a complete txContext
 
 
-function createWithdrawl(txContext, validatorBech32, memo) {
+function createWithdrawl(txContext, memo) {
   var txSkeleton = createSkeleton(txContext);
   var txMsg = {
-    type: 'cosmos-sdk/MsgWithdrawDelegationReward',
+    type: 'cosmos-sdk/MsgWithdrawDelegationRewardsAll',
     value: {
-      delegator_address: txContext.bech32,
-      validator_address: validatorBech32
+      delegator_address: txContext.bech32
     }
   };
   txSkeleton.value.msg = [txMsg];

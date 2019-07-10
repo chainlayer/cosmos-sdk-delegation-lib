@@ -641,7 +641,7 @@ CosmosDelegateTool.prototype.getRewards =
 function () {
   var _ref11 = (0, _asyncToGenerator2["default"])(
   /*#__PURE__*/
-  _regenerator["default"].mark(function _callee11(validator, addr) {
+  _regenerator["default"].mark(function _callee11(addr) {
     var _this6 = this;
 
     var url;
@@ -649,7 +649,7 @@ function () {
       while (1) {
         switch (_context11.prev = _context11.next) {
           case 0:
-            url = "".concat(nodeURL(this), "/distribution/delegators/").concat(addr.bech32, "/rewards/").concat(validator);
+            url = "".concat(nodeURL(this), "/distribution/delegators/").concat(addr.bech32, "/rewards");
             return _context11.abrupt("return", _axios["default"].get(url).then(function (r) {
               var reward = (0, _big["default"])(0);
 
@@ -674,7 +674,7 @@ function () {
     }, _callee11, this);
   }));
 
-  return function (_x15, _x16) {
+  return function (_x15) {
     return _ref11.apply(this, arguments);
   };
 }(); // Creates a new delegation tx based on the input parameters
@@ -727,7 +727,7 @@ function () {
     }, _callee12, this);
   }));
 
-  return function (_x17, _x18, _x19, _x20) {
+  return function (_x16, _x17, _x18, _x19) {
     return _ref12.apply(this, arguments);
   };
 }(); // Creates a new staking tx based on the input parameters
@@ -781,7 +781,7 @@ function () {
     }, _callee13, this);
   }));
 
-  return function (_x21, _x22, _x23, _x24, _x25) {
+  return function (_x20, _x21, _x22, _x23, _x24) {
     return _ref13.apply(this, arguments);
   };
 }(); // Creates a new undelegation tx based on the input parameters
@@ -834,7 +834,7 @@ function () {
     }, _callee14, this);
   }));
 
-  return function (_x26, _x27, _x28, _x29) {
+  return function (_x25, _x26, _x27, _x28) {
     return _ref14.apply(this, arguments);
   };
 }(); // Creates a new withdrawl tx based on the input parameters
@@ -845,7 +845,7 @@ CosmosDelegateTool.prototype.txCreateWithdrawl =
 function () {
   var _ref15 = (0, _asyncToGenerator2["default"])(
   /*#__PURE__*/
-  _regenerator["default"].mark(function _callee15(txContext, validatorBech32, memo) {
+  _regenerator["default"].mark(function _callee15(txContext, memo) {
     var accountInfo;
     return _regenerator["default"].wrap(function _callee15$(_context15) {
       while (1) {
@@ -876,7 +876,7 @@ function () {
             txContext.accountNumber = accountInfo.accountNumber; // eslint-disable-next-line no-param-reassign
 
             txContext.sequence = accountInfo.sequence;
-            return _context15.abrupt("return", _cosmos["default"].createWithdrawl(txContext, validatorBech32, memo));
+            return _context15.abrupt("return", _cosmos["default"].createWithdrawl(txContext, memo));
 
           case 10:
           case "end":
@@ -886,7 +886,7 @@ function () {
     }, _callee15, this);
   }));
 
-  return function (_x30, _x31, _x32) {
+  return function (_x29, _x30) {
     return _ref15.apply(this, arguments);
   };
 }(); // Relays a signed transaction and returns a transaction hash
@@ -924,7 +924,7 @@ function () {
     }, _callee16, this);
   }));
 
-  return function (_x33) {
+  return function (_x31) {
     return _ref16.apply(this, arguments);
   };
 }(); // Retrieve the status of a transaction hash
@@ -958,7 +958,7 @@ function () {
     }, _callee17, this);
   }));
 
-  return function (_x34) {
+  return function (_x32) {
     return _ref17.apply(this, arguments);
   };
 }();

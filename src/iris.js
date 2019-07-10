@@ -231,12 +231,34 @@ function createRedelegate(
     return txSkeleton;
 }
 
+// Creates a new withdrawl tx based on the input parameters
+// the function expects a complete txContext
+function createWithdrawl(
+    txContext,
+    memo,
+) {
+    const txSkeleton = createSkeleton(txContext);
+
+    const txMsg = {
+        type: 'irishub/distr/MsgWithdrawDelegationRewardsAll',
+        value: {
+            delegator_address: txContext.bech32,
+        }
+    };
+
+    txSkeleton.value.msg = [txMsg];
+    txSkeleton.value.memo = memo || '';
+
+    return txSkeleton;
+}
+
 export default {
     DEFAULT_DENOM,
     createSkeleton,
     createDelegate,
     createRedelegate,
     createUndelegate,
+    createWithdrawl,
     getBytesToSign,
     applySignature,
 };

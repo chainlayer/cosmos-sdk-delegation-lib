@@ -18,6 +18,8 @@ var _axios = _interopRequireDefault(require("axios"));
 
 var _big = _interopRequireDefault(require("big.js"));
 
+var _cosmos = _interopRequireDefault(require("./cosmos"));
+
 /** ******************************************************************************
  *  (c) 2019 ChainLayer
  *
@@ -632,49 +634,40 @@ function () {
   return function (_x12) {
     return _ref9.apply(this, arguments);
   };
-}(); // Creates a new delegation tx based on the input parameters
-// this function expect that retrieve balances has been called before
+}(); // Retrieve atom rewards from the network for an account and validator
 
 
-IrisDelegateTool.prototype.txCreateDelegate =
+IrisDelegateTool.prototype.getRewards =
 /*#__PURE__*/
 function () {
   var _ref11 = (0, _asyncToGenerator2["default"])(
   /*#__PURE__*/
-  _regenerator["default"].mark(function _callee11(txContext, validatorBech32, uatomAmount, memo) {
-    var accountInfo;
+  _regenerator["default"].mark(function _callee11(addr) {
+    var _this6 = this;
+
+    var url;
     return _regenerator["default"].wrap(function _callee11$(_context11) {
       while (1) {
         switch (_context11.prev = _context11.next) {
           case 0:
-            if (!(typeof txContext === 'undefined')) {
-              _context11.next = 2;
-              break;
-            }
+            url = "".concat(nodeURL(this), "/distribution/").concat(addr.bech32, "/rewards");
+            return _context11.abrupt("return", _axios["default"].get(url).then(function (r) {
+              var reward = (0, _big["default"])(0);
 
-            throw new Error('undefined txContext');
+              try {
+                if (typeof r.data[0].amount !== 'undefined' && r.data !== null) {
+                  reward = r.data[0].amount;
+                }
+              } catch (e) {
+                console.log('Error ', e, ' returning defaults');
+              }
+
+              return reward;
+            }, function (e) {
+              return wrapError(_this6, e);
+            }));
 
           case 2:
-            if (!(typeof txContext.bech32 === 'undefined')) {
-              _context11.next = 4;
-              break;
-            }
-
-            throw new Error('txContext does not contain the source address (bech32)');
-
-          case 4:
-            _context11.next = 6;
-            return this.getAccountInfo(txContext);
-
-          case 6:
-            accountInfo = _context11.sent;
-            // eslint-disable-next-line no-param-reassign
-            txContext.accountNumber = accountInfo.accountNumber; // eslint-disable-next-line no-param-reassign
-
-            txContext.sequence = accountInfo.sequence;
-            return _context11.abrupt("return", _iris["default"].createDelegate(txContext, validatorBech32, (0, _big["default"])(uatomAmount), memo));
-
-          case 10:
           case "end":
             return _context11.stop();
         }
@@ -682,19 +675,19 @@ function () {
     }, _callee11, this);
   }));
 
-  return function (_x15, _x16, _x17, _x18) {
+  return function (_x15) {
     return _ref11.apply(this, arguments);
   };
-}(); // Creates a new staking tx based on the input parameters
+}(); // Creates a new delegation tx based on the input parameters
 // this function expect that retrieve balances has been called before
 
 
-IrisDelegateTool.prototype.txCreateRedelegate =
+IrisDelegateTool.prototype.txCreateDelegate =
 /*#__PURE__*/
 function () {
   var _ref12 = (0, _asyncToGenerator2["default"])(
   /*#__PURE__*/
-  _regenerator["default"].mark(function _callee12(txContext, validatorSourceBech32, validatorDestBech32, uatomAmount, memo) {
+  _regenerator["default"].mark(function _callee12(txContext, validatorBech32, uatomAmount, memo) {
     var accountInfo;
     return _regenerator["default"].wrap(function _callee12$(_context12) {
       while (1) {
@@ -724,9 +717,8 @@ function () {
             // eslint-disable-next-line no-param-reassign
             txContext.accountNumber = accountInfo.accountNumber; // eslint-disable-next-line no-param-reassign
 
-            txContext.sequence = accountInfo.sequence; // Convert from uatoms to shares
-
-            return _context12.abrupt("return", _iris["default"].createRedelegate(txContext, validatorSourceBech32, validatorDestBech32, (0, _big["default"])(uatomAmount), memo));
+            txContext.sequence = accountInfo.sequence;
+            return _context12.abrupt("return", _iris["default"].createDelegate(txContext, validatorBech32, (0, _big["default"])(uatomAmount), memo));
 
           case 10:
           case "end":
@@ -736,19 +728,19 @@ function () {
     }, _callee12, this);
   }));
 
-  return function (_x19, _x20, _x21, _x22, _x23) {
+  return function (_x16, _x17, _x18, _x19) {
     return _ref12.apply(this, arguments);
   };
-}(); // Creates a new undelegation tx based on the input parameters
+}(); // Creates a new staking tx based on the input parameters
 // this function expect that retrieve balances has been called before
 
 
-IrisDelegateTool.prototype.txCreateUndelegate =
+IrisDelegateTool.prototype.txCreateRedelegate =
 /*#__PURE__*/
 function () {
   var _ref13 = (0, _asyncToGenerator2["default"])(
   /*#__PURE__*/
-  _regenerator["default"].mark(function _callee13(txContext, validatorBech32, uatomAmount, memo) {
+  _regenerator["default"].mark(function _callee13(txContext, validatorSourceBech32, validatorDestBech32, uatomAmount, memo) {
     var accountInfo;
     return _regenerator["default"].wrap(function _callee13$(_context13) {
       while (1) {
@@ -778,8 +770,9 @@ function () {
             // eslint-disable-next-line no-param-reassign
             txContext.accountNumber = accountInfo.accountNumber; // eslint-disable-next-line no-param-reassign
 
-            txContext.sequence = accountInfo.sequence;
-            return _context13.abrupt("return", _iris["default"].createUndelegate(txContext, validatorBech32, (0, _big["default"])(uatomAmount), memo));
+            txContext.sequence = accountInfo.sequence; // Convert from uatoms to shares
+
+            return _context13.abrupt("return", _iris["default"].createRedelegate(txContext, validatorSourceBech32, validatorDestBech32, (0, _big["default"])(uatomAmount), memo));
 
           case 10:
           case "end":
@@ -789,37 +782,52 @@ function () {
     }, _callee13, this);
   }));
 
-  return function (_x24, _x25, _x26, _x27) {
+  return function (_x20, _x21, _x22, _x23, _x24) {
     return _ref13.apply(this, arguments);
   };
-}(); // Relays a signed transaction and returns a transaction hash
+}(); // Creates a new undelegation tx based on the input parameters
+// this function expect that retrieve balances has been called before
 
 
-IrisDelegateTool.prototype.txSubmit =
+IrisDelegateTool.prototype.txCreateUndelegate =
 /*#__PURE__*/
 function () {
   var _ref14 = (0, _asyncToGenerator2["default"])(
   /*#__PURE__*/
-  _regenerator["default"].mark(function _callee14(signedTx) {
-    var _this6 = this;
-
-    var txBody, url;
+  _regenerator["default"].mark(function _callee14(txContext, validatorBech32, uatomAmount, memo) {
+    var accountInfo;
     return _regenerator["default"].wrap(function _callee14$(_context14) {
       while (1) {
         switch (_context14.prev = _context14.next) {
           case 0:
-            txBody = {
-              tx: signedTx.value,
-              mode: 'async'
-            };
-            url = "".concat(nodeURL(this), "/tx/broadcast");
-            return _context14.abrupt("return", _axios["default"].post(url, JSON.stringify(txBody)).then(function (r) {
-              return r;
-            }, function (e) {
-              return wrapError(_this6, e);
-            }));
+            if (!(typeof txContext === 'undefined')) {
+              _context14.next = 2;
+              break;
+            }
 
-          case 3:
+            throw new Error('undefined txContext');
+
+          case 2:
+            if (!(typeof txContext.bech32 === 'undefined')) {
+              _context14.next = 4;
+              break;
+            }
+
+            throw new Error('txContext does not contain the source address (bech32)');
+
+          case 4:
+            _context14.next = 6;
+            return this.getAccountInfo(txContext);
+
+          case 6:
+            accountInfo = _context14.sent;
+            // eslint-disable-next-line no-param-reassign
+            txContext.accountNumber = accountInfo.accountNumber; // eslint-disable-next-line no-param-reassign
+
+            txContext.sequence = accountInfo.sequence;
+            return _context14.abrupt("return", _iris["default"].createUndelegate(txContext, validatorBech32, (0, _big["default"])(uatomAmount), memo));
+
+          case 10:
           case "end":
             return _context14.stop();
         }
@@ -827,33 +835,51 @@ function () {
     }, _callee14, this);
   }));
 
-  return function (_x28) {
+  return function (_x25, _x26, _x27, _x28) {
     return _ref14.apply(this, arguments);
   };
-}(); // Retrieve the status of a transaction hash
+}(); // Creates a new withdrawl tx based on the input parameters
 
 
-IrisDelegateTool.prototype.txStatus =
+IrisDelegateTool.prototype.txCreateWithdrawl =
 /*#__PURE__*/
 function () {
   var _ref15 = (0, _asyncToGenerator2["default"])(
   /*#__PURE__*/
-  _regenerator["default"].mark(function _callee15(txHash) {
-    var _this7 = this;
-
-    var url;
+  _regenerator["default"].mark(function _callee15(txContext, memo) {
+    var accountInfo;
     return _regenerator["default"].wrap(function _callee15$(_context15) {
       while (1) {
         switch (_context15.prev = _context15.next) {
           case 0:
-            url = "".concat(nodeURL(this), "/txs/").concat(txHash);
-            return _context15.abrupt("return", _axios["default"].get(url).then(function (r) {
-              return r.data;
-            }, function (e) {
-              return wrapError(_this7, e);
-            }));
+            if (!(typeof txContext === 'undefined')) {
+              _context15.next = 2;
+              break;
+            }
+
+            throw new Error('undefined txContext');
 
           case 2:
+            if (!(typeof txContext.bech32 === 'undefined')) {
+              _context15.next = 4;
+              break;
+            }
+
+            throw new Error('txContext does not contain the source address (bech32)');
+
+          case 4:
+            _context15.next = 6;
+            return this.getAccountInfo(txContext);
+
+          case 6:
+            accountInfo = _context15.sent;
+            // eslint-disable-next-line no-param-reassign
+            txContext.accountNumber = accountInfo.accountNumber; // eslint-disable-next-line no-param-reassign
+
+            txContext.sequence = accountInfo.sequence;
+            return _context15.abrupt("return", _iris["default"].createWithdrawl(txContext, memo));
+
+          case 10:
           case "end":
             return _context15.stop();
         }
@@ -861,8 +887,80 @@ function () {
     }, _callee15, this);
   }));
 
-  return function (_x29) {
+  return function (_x29, _x30) {
     return _ref15.apply(this, arguments);
+  };
+}(); // Relays a signed transaction and returns a transaction hash
+
+
+IrisDelegateTool.prototype.txSubmit =
+/*#__PURE__*/
+function () {
+  var _ref16 = (0, _asyncToGenerator2["default"])(
+  /*#__PURE__*/
+  _regenerator["default"].mark(function _callee16(signedTx) {
+    var _this7 = this;
+
+    var txBody, url;
+    return _regenerator["default"].wrap(function _callee16$(_context16) {
+      while (1) {
+        switch (_context16.prev = _context16.next) {
+          case 0:
+            txBody = {
+              tx: signedTx.value,
+              mode: 'async'
+            };
+            url = "".concat(nodeURL(this), "/tx/broadcast");
+            return _context16.abrupt("return", _axios["default"].post(url, JSON.stringify(txBody)).then(function (r) {
+              return r;
+            }, function (e) {
+              return wrapError(_this7, e);
+            }));
+
+          case 3:
+          case "end":
+            return _context16.stop();
+        }
+      }
+    }, _callee16, this);
+  }));
+
+  return function (_x31) {
+    return _ref16.apply(this, arguments);
+  };
+}(); // Retrieve the status of a transaction hash
+
+
+IrisDelegateTool.prototype.txStatus =
+/*#__PURE__*/
+function () {
+  var _ref17 = (0, _asyncToGenerator2["default"])(
+  /*#__PURE__*/
+  _regenerator["default"].mark(function _callee17(txHash) {
+    var _this8 = this;
+
+    var url;
+    return _regenerator["default"].wrap(function _callee17$(_context17) {
+      while (1) {
+        switch (_context17.prev = _context17.next) {
+          case 0:
+            url = "".concat(nodeURL(this), "/txs/").concat(txHash);
+            return _context17.abrupt("return", _axios["default"].get(url).then(function (r) {
+              return r.data;
+            }, function (e) {
+              return wrapError(_this8, e);
+            }));
+
+          case 2:
+          case "end":
+            return _context17.stop();
+        }
+      }
+    }, _callee17, this);
+  }));
+
+  return function (_x32) {
+    return _ref17.apply(this, arguments);
   };
 }();
 
