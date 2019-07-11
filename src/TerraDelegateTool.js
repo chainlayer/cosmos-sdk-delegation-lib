@@ -328,7 +328,6 @@ TerraDelegateTool.prototype.getRewards = async function (validator, addr) {
 
         try {
             for (let i = 0; i < r.data.length; i++) {
-                console.log(r.data[i]);
                 if (typeof r.data[i].amount !== 'undefined' && r.data[i] !== null && r.data[i].denom == "uluna") {
                     reward = r.data[i].amount;
                 }
