@@ -656,8 +656,12 @@ function () {
               var reward = (0, _big["default"])(0);
 
               try {
-                if (typeof r.data[0].amount !== 'undefined' && r.data !== null) {
-                  reward = r.data[0].amount;
+                for (var i = 0; i < r.data.length; i++) {
+                  console.log(r.data[i]);
+
+                  if (typeof r.data[i].amount !== 'undefined' && r.data[i] !== null && r.data[i].denom == "uluna") {
+                    reward = r.data[i].amount;
+                  }
                 }
               } catch (e) {
                 console.log('Error ', e, ' returning defaults');
