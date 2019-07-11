@@ -576,7 +576,7 @@ test('get reward', async () => {
     const mock = new MockAdapter(axios);
     mock.onGet('mockNode/distribution/cosmos1zwp97t7kx6sgk5yz6ad9ajqyndd8lv0mw6xpxh/rewards').reply(
         200,
-        [{
+        {
             "total": [
                 {
                     "denom": "iris-atto",
@@ -595,7 +595,7 @@ test('get reward', async () => {
                 }
             ],
             "commission": null
-        }],
+        },
     );
 
     const cdt = new IrisDelegateTool();

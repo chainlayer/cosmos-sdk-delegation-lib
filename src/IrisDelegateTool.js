@@ -327,8 +327,8 @@ IrisDelegateTool.prototype.getRewards = async function (addr) {
         let reward = Big(0);
 
         try {
-            if (typeof r.data[0].total[0] !== 'undefined' && r.data !== null) {
-                reward = r.data[0].total[0].amount;
+            if (typeof r.data.total[0] !== 'undefined' && r.data !== null) {
+                reward = r.data.total[0].amount;
             }
         } catch (e) {
             console.log('Error ', e, ' returning defaults');
