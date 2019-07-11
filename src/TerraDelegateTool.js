@@ -339,6 +339,7 @@ TerraDelegateTool.prototype.getRewards = async function (validator, addr) {
 
         return reward;
     }, e => wrapError(this, e));
+    return e;
 };
 
 // Creates a new delegation tx based on the input parameters
