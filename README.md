@@ -1,10 +1,17 @@
 ## Cosmos-SDK Delegation library
 Delegation library for Cosmos-SDK coins. Initially copied from github.com/ZondaX/cosmos-delegation-js and modified to work for all Cosmos-SDK networks
+
+## TODO
+- Cleanup code and make function more generic
+- Improve code coverage
+- Add support for other coins
+
 ## Usage
-Works for Iris and Cosmos. Other networks to be added
+Works for Iris, Terra and Cosmos. Other networks to be added
 
 * add package to package.json
 * import correct library ``` import IrisDelegateTool from "delegation-js"; ```
+
 ## Copyright
 * Copyright (c) 2019 ChainLayer
 * Original copyright (c) 2019 ZondaX GmbH
