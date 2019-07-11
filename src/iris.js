@@ -242,7 +242,7 @@ function createWithdrawl(
     const txMsg = {
         type: 'irishub/distr/MsgWithdrawDelegationRewardsAll',
         value: {
-            delegator_address: txContext.bech32,
+            delegator_addr: txContext.bech32,
         }
     };
 
