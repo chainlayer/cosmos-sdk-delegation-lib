@@ -413,7 +413,20 @@ _regenerator["default"].mark(function _callee6() {
               validators[t.operator_address] = validatorData;
             }
 
-            return validators;
+            var url2 = "".concat(nodeURL(_this2), "/stake/validators?page=2");
+            return _axios["default"].get(url2).then(function (r) {
+              for (var _i = 0; _i < r.data.length; _i += 1) {
+                var _validatorData = {};
+                var _t = r.data[_i];
+                _validatorData.tokens = (0, _big["default"])(_t.tokens);
+                _validatorData.totalShares = (0, _big["default"])(_t.delegator_shares);
+                validators[_t.operator_address] = _validatorData;
+              }
+
+              return validators;
+            }, function (e) {
+              return wrapError(_this2, e);
+            });
           }, function (e) {
             return wrapError(_this2, e);
           }));
