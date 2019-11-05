@@ -1,6 +1,6 @@
 {
   "name": "cosmos-sdk-delegation-lib",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Node API for Cosmos-SDK Delegation using Ledger Nano S/X",
   "main": "./dist/index.js",
   "repository": {
@@ -12,6 +12,7 @@
     "Javascript",
     "Tendermint",
     "Cosmos",
+    "Kava",
     "Delegation"
   ],
   "author": "ChainLayer.io",

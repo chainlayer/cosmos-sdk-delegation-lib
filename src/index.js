@@ -21,9 +21,12 @@ import IrisDelegateTool from './IrisDelegateTool';
 import CosmosDelegateTool from './CosmosDelegateTool';
 // eslint-disable-next-line import/no-unresolved
 import TerraDelegateTool from './TerraDelegateTool';
+// eslint-disable-next-line import/no-unresolved
+import KavaDelegateTool from './KavaDelegateTool';
 
 module.exports = {
     IrisDelegateTool: IrisDelegateTool,
     TerraDelegateTool: TerraDelegateTool,
-    CosmosDelegateTool: CosmosDelegateTool
+    CosmosDelegateTool: CosmosDelegateTool,
+    KavaDelegateTool: KavaDelegateTool
 };

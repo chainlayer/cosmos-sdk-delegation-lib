@@ -8,6 +8,8 @@ var _CosmosDelegateTool = _interopRequireDefault(require("./CosmosDelegateTool")
 
 var _TerraDelegateTool = _interopRequireDefault(require("./TerraDelegateTool"));
 
+var _KavaDelegateTool = _interopRequireDefault(require("./KavaDelegateTool"));
+
 /** ******************************************************************************
  *  (c) 2019 ChainLayer
  *  Original (c) 2019 ZondaX GmbH
@@ -27,8 +29,10 @@ var _TerraDelegateTool = _interopRequireDefault(require("./TerraDelegateTool"));
 // eslint-disable-next-line import/no-unresolved
 // eslint-disable-next-line import/no-unresolved
 // eslint-disable-next-line import/no-unresolved
+// eslint-disable-next-line import/no-unresolved
 module.exports = {
   IrisDelegateTool: _IrisDelegateTool["default"],
   TerraDelegateTool: _TerraDelegateTool["default"],
-  CosmosDelegateTool: _CosmosDelegateTool["default"]
+  CosmosDelegateTool: _CosmosDelegateTool["default"],
+  KavaDelegateTool: _KavaDelegateTool["default"]
 };

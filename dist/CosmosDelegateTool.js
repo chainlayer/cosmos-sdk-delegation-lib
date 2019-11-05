@@ -6,8 +6,6 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
-var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
-
 var _ledgerCosmosJs = _interopRequireWildcard(require("ledger-cosmos-js"));
 
 var _cosmos = _interopRequireDefault(require("./cosmos"));
@@ -111,13 +109,9 @@ CosmosDelegateTool.prototype.setHrp = function (hrp) {
 }; // Detect when a ledger device is connected and verify the cosmos app is running.
 
 
-CosmosDelegateTool.prototype.connect =
-/*#__PURE__*/
-(0, _asyncToGenerator2["default"])(
-/*#__PURE__*/
-_regenerator["default"].mark(function _callee() {
+CosmosDelegateTool.prototype.connect = function _callee() {
   var appInfo, version, major, minor;
-  return _regenerator["default"].wrap(function _callee$(_context) {
+  return _regenerator["default"].async(function _callee$(_context) {
     while (1) {
       switch (_context.prev = _context.next) {
         case 0:
@@ -131,7 +125,7 @@ _regenerator["default"].mark(function _callee() {
           }
 
           _context.next = 6;
-          return this.app.appInfo();
+          return _regenerator["default"].awrap(this.app.appInfo());
 
         case 6:
           appInfo = _context.sent;
@@ -158,7 +152,7 @@ _regenerator["default"].mark(function _callee() {
 
         case 15:
           _context.next = 17;
-          return this.app.getVersion();
+          return _regenerator["default"].awrap(this.app.getVersion());
 
         case 17:
           version = _context.sent;
@@ -193,184 +187,151 @@ _regenerator["default"].mark(function _callee() {
           return _context.stop();
       }
     }
-  }, _callee, this);
-})); // Returns a signed transaction ready to be relayed
+  }, null, this);
+}; // Returns a signed transaction ready to be relayed
 
-CosmosDelegateTool.prototype.sign =
-/*#__PURE__*/
-function () {
-  var _ref2 = (0, _asyncToGenerator2["default"])(
-  /*#__PURE__*/
-  _regenerator["default"].mark(function _callee2(unsignedTx, txContext) {
-    var bytesToSign, response, sig;
-    return _regenerator["default"].wrap(function _callee2$(_context2) {
-      while (1) {
-        switch (_context2.prev = _context2.next) {
-          case 0:
-            connectedOrThrow(this);
 
-            if (!(typeof txContext.path === 'undefined')) {
-              _context2.next = 4;
-              break;
-            }
+CosmosDelegateTool.prototype.sign = function _callee2(unsignedTx, txContext) {
+  var bytesToSign, response, sig;
+  return _regenerator["default"].async(function _callee2$(_context2) {
+    while (1) {
+      switch (_context2.prev = _context2.next) {
+        case 0:
+          connectedOrThrow(this);
 
-            this.lastError = 'context should include the account path';
-            throw new Error('context should include the account path');
+          if (!(typeof txContext.path === 'undefined')) {
+            _context2.next = 4;
+            break;
+          }
 
-          case 4:
-            bytesToSign = _cosmos["default"].getBytesToSign(unsignedTx, txContext);
-            console.log(bytesToSign);
-            _context2.next = 8;
-            return this.app.sign(txContext.path, bytesToSign);
+          this.lastError = 'context should include the account path';
+          throw new Error('context should include the account path');
 
-          case 8:
-            response = _context2.sent;
+        case 4:
+          bytesToSign = _cosmos["default"].getBytesToSign(unsignedTx, txContext);
+          console.log(bytesToSign);
+          _context2.next = 8;
+          return _regenerator["default"].awrap(this.app.sign(txContext.path, bytesToSign));
 
-            if (!(response.return_code !== 0x9000)) {
-              _context2.next = 12;
-              break;
-            }
+        case 8:
+          response = _context2.sent;
 
-            this.lastError = response.error_message;
-            throw new Error(response.error_message);
+          if (!(response.return_code !== 0x9000)) {
+            _context2.next = 12;
+            break;
+          }
 
-          case 12:
-            sig = _secp256k["default"].signatureImport(response.signature);
-            return _context2.abrupt("return", _cosmos["default"].applySignature(unsignedTx, txContext, sig));
+          this.lastError = response.error_message;
+          throw new Error(response.error_message);
 
-          case 14:
-          case "end":
-            return _context2.stop();
-        }
+        case 12:
+          sig = _secp256k["default"].signatureImport(response.signature);
+          return _context2.abrupt("return", _cosmos["default"].applySignature(unsignedTx, txContext, sig));
+
+        case 14:
+        case "end":
+          return _context2.stop();
       }
-    }, _callee2, this);
-  }));
-
-  return function (_x, _x2) {
-    return _ref2.apply(this, arguments);
-  };
-}(); // Retrieve public key and bech32 address
+    }
+  }, null, this);
+}; // Retrieve public key and bech32 address
 
 
-CosmosDelegateTool.prototype.retrieveAddress =
-/*#__PURE__*/
-function () {
-  var _ref3 = (0, _asyncToGenerator2["default"])(
-  /*#__PURE__*/
-  _regenerator["default"].mark(function _callee3(network, account, change, index) {
-    var path, pk;
-    return _regenerator["default"].wrap(function _callee3$(_context3) {
-      while (1) {
-        switch (_context3.prev = _context3.next) {
-          case 0:
-            connectedOrThrow(this);
-            path = [44, network, account, change, index];
-            _context3.next = 4;
-            return this.app.publicKey(path);
+CosmosDelegateTool.prototype.retrieveAddress = function _callee3(network, account, change, index) {
+  var path, pk;
+  return _regenerator["default"].async(function _callee3$(_context3) {
+    while (1) {
+      switch (_context3.prev = _context3.next) {
+        case 0:
+          connectedOrThrow(this);
+          path = [44, network, account, change, index];
+          _context3.next = 4;
+          return _regenerator["default"].awrap(this.app.publicKey(path));
 
-          case 4:
-            pk = _context3.sent;
+        case 4:
+          pk = _context3.sent;
 
-            if (!(pk.return_code !== 0x9000)) {
-              _context3.next = 8;
-              break;
-            }
+          if (!(pk.return_code !== 0x9000)) {
+            _context3.next = 8;
+            break;
+          }
 
-            this.lastError = pk.error_message;
-            throw new Error(pk.error_message);
+          this.lastError = pk.error_message;
+          throw new Error(pk.error_message);
 
-          case 8:
-            return _context3.abrupt("return", {
-              pk: pk.compressed_pk.toString('hex'),
-              path: path,
-              bech32: (0, _ledgerCosmosJs.getBech32FromPK)(this.hrp, pk.compressed_pk)
-            });
+        case 8:
+          return _context3.abrupt("return", {
+            pk: pk.compressed_pk.toString('hex'),
+            path: path,
+            bech32: (0, _ledgerCosmosJs.getBech32FromPK)(this.hrp, pk.compressed_pk)
+          });
 
-          case 9:
-          case "end":
-            return _context3.stop();
-        }
+        case 9:
+        case "end":
+          return _context3.stop();
       }
-    }, _callee3, this);
-  }));
-
-  return function (_x3, _x4, _x5, _x6) {
-    return _ref3.apply(this, arguments);
-  };
-}(); // Scan multiple address in a derivation path range (44’/118’/X/0/Y)
+    }
+  }, null, this);
+}; // Scan multiple address in a derivation path range (44’/118’/X/0/Y)
 // eslint-disable-next-line max-len
 
 
-CosmosDelegateTool.prototype.scanAddresses =
-/*#__PURE__*/
-function () {
-  var _ref4 = (0, _asyncToGenerator2["default"])(
-  /*#__PURE__*/
-  _regenerator["default"].mark(function _callee4(minAccount, maxAccount, minIndex, maxIndex) {
-    var answer, account, index, tmp;
-    return _regenerator["default"].wrap(function _callee4$(_context4) {
-      while (1) {
-        switch (_context4.prev = _context4.next) {
-          case 0:
-            answer = [];
-            account = minAccount;
+CosmosDelegateTool.prototype.scanAddresses = function _callee4(minAccount, maxAccount, minIndex, maxIndex) {
+  var answer, account, index, tmp;
+  return _regenerator["default"].async(function _callee4$(_context4) {
+    while (1) {
+      switch (_context4.prev = _context4.next) {
+        case 0:
+          answer = [];
+          account = minAccount;
 
-          case 2:
-            if (!(account < maxAccount + 1)) {
-              _context4.next = 15;
-              break;
-            }
-
-            index = minIndex;
-
-          case 4:
-            if (!(index < maxIndex + 1)) {
-              _context4.next = 12;
-              break;
-            }
-
-            _context4.next = 7;
-            return this.retrieveAddress(account, index);
-
-          case 7:
-            tmp = _context4.sent;
-            answer.push(tmp);
-
-          case 9:
-            index += 1;
-            _context4.next = 4;
+        case 2:
+          if (!(account < maxAccount + 1)) {
+            _context4.next = 15;
             break;
+          }
 
-          case 12:
-            account += 1;
-            _context4.next = 2;
+          index = minIndex;
+
+        case 4:
+          if (!(index < maxIndex + 1)) {
+            _context4.next = 12;
             break;
+          }
 
-          case 15:
-            return _context4.abrupt("return", answer);
+          _context4.next = 7;
+          return _regenerator["default"].awrap(this.retrieveAddress(account, index));
 
-          case 16:
-          case "end":
-            return _context4.stop();
-        }
+        case 7:
+          tmp = _context4.sent;
+          answer.push(tmp);
+
+        case 9:
+          index += 1;
+          _context4.next = 4;
+          break;
+
+        case 12:
+          account += 1;
+          _context4.next = 2;
+          break;
+
+        case 15:
+          return _context4.abrupt("return", answer);
+
+        case 16:
+        case "end":
+          return _context4.stop();
       }
-    }, _callee4, this);
-  }));
+    }
+  }, null, this);
+};
 
-  return function (_x7, _x8, _x9, _x10) {
-    return _ref4.apply(this, arguments);
-  };
-}();
-
-CosmosDelegateTool.prototype.getPrice =
-/*#__PURE__*/
-(0, _asyncToGenerator2["default"])(
-/*#__PURE__*/
-_regenerator["default"].mark(function _callee5() {
+CosmosDelegateTool.prototype.getPrice = function _callee5() {
   var _this = this;
 
   var url;
-  return _regenerator["default"].wrap(function _callee5$(_context5) {
+  return _regenerator["default"].async(function _callee5$(_context5) {
     while (1) {
       switch (_context5.prev = _context5.next) {
         case 0:
@@ -386,17 +347,14 @@ _regenerator["default"].mark(function _callee5() {
           return _context5.stop();
       }
     }
-  }, _callee5);
-}));
-CosmosDelegateTool.prototype.retrieveValidators =
-/*#__PURE__*/
-(0, _asyncToGenerator2["default"])(
-/*#__PURE__*/
-_regenerator["default"].mark(function _callee6() {
+  });
+};
+
+CosmosDelegateTool.prototype.retrieveValidators = function _callee6() {
   var _this2 = this;
 
   var url;
-  return _regenerator["default"].wrap(function _callee6$(_context6) {
+  return _regenerator["default"].async(function _callee6$(_context6) {
     while (1) {
       switch (_context6.prev = _context6.next) {
         case 0:
@@ -422,545 +380,435 @@ _regenerator["default"].mark(function _callee6() {
           return _context6.stop();
       }
     }
-  }, _callee6, this);
-}));
+  }, null, this);
+};
 
-CosmosDelegateTool.prototype.getAccountInfo =
-/*#__PURE__*/
-function () {
-  var _ref7 = (0, _asyncToGenerator2["default"])(
-  /*#__PURE__*/
-  _regenerator["default"].mark(function _callee7(addr) {
-    var _this3 = this;
+CosmosDelegateTool.prototype.getAccountInfo = function _callee7(addr) {
+  var _this3 = this;
 
-    var url, txContext;
-    return _regenerator["default"].wrap(function _callee7$(_context7) {
-      while (1) {
-        switch (_context7.prev = _context7.next) {
-          case 0:
-            url = "".concat(nodeURL(this), "/auth/accounts/").concat(addr.bech32);
-            txContext = {
-              sequence: '0',
-              accountNumber: '0',
-              balance: '0'
+  var url, txContext;
+  return _regenerator["default"].async(function _callee7$(_context7) {
+    while (1) {
+      switch (_context7.prev = _context7.next) {
+        case 0:
+          url = "".concat(nodeURL(this), "/auth/accounts/").concat(addr.bech32);
+          txContext = {
+            sequence: '0',
+            accountNumber: '0',
+            balance: '0'
+          };
+          return _context7.abrupt("return", _axios["default"].get(url).then(function (r) {
+            try {
+              if (typeof r.data !== 'undefined' && typeof r.data.value !== 'undefined') {
+                txContext.sequence = Number(r.data.value.sequence).toString();
+                txContext.accountNumber = Number(r.data.value.account_number).toString();
+
+                if (r.data.value.coins !== null) {
+                  var tmp = r.data.value.coins.filter(function (x) {
+                    return x.denom === _cosmos["default"].DEFAULT_DENOM;
+                  });
+
+                  if (tmp.length > 0) {
+                    txContext.balance = (0, _big["default"])(tmp[0].amount).toString();
+                  }
+                }
+              }
+            } catch (e) {
+              console.log('Error ', e, ' returning defaults');
+            }
+
+            return txContext;
+          }, function (e) {
+            return wrapError(_this3, e);
+          }));
+
+        case 3:
+        case "end":
+          return _context7.stop();
+      }
+    }
+  }, null, this);
+};
+
+CosmosDelegateTool.prototype.getAccountDelegations = function _callee8(validators, addr) {
+  var _this4 = this;
+
+  var url;
+  return _regenerator["default"].async(function _callee8$(_context8) {
+    while (1) {
+      switch (_context8.prev = _context8.next) {
+        case 0:
+          url = "".concat(nodeURL(this), "/staking/delegators/").concat(addr.bech32, "/delegations");
+          return _context8.abrupt("return", _axios["default"].get(url).then(function (r) {
+            var txContext = {
+              delegations: {},
+              delegationsTotal: '0'
             };
-            return _context7.abrupt("return", _axios["default"].get(url).then(function (r) {
-              try {
-                if (typeof r.data !== 'undefined' && typeof r.data.value !== 'undefined') {
-                  txContext.sequence = Number(r.data.value.sequence).toString();
-                  txContext.accountNumber = Number(r.data.value.account_number).toString();
+            var delegations = {};
+            var totalDelegation = (0, _big["default"])(0);
 
-                  if (r.data.value.coins !== null) {
-                    var tmp = r.data.value.coins.filter(function (x) {
-                      return x.denom === _cosmos["default"].DEFAULT_DENOM;
-                    });
+            try {
+              if (typeof r.data !== 'undefined' && r.data !== null) {
+                for (var i = 0; i < r.data.length; i += 1) {
+                  var t = r.data[i];
+                  var valAddr = t.validator_address;
 
-                    if (tmp.length > 0) {
-                      txContext.balance = (0, _big["default"])(tmp[0].amount).toString();
-                    }
+                  if (valAddr in validators) {
+                    var shares = (0, _big["default"])(t.shares);
+                    var valData = validators[valAddr];
+                    var valTokens = valData.tokens;
+                    var valTotalShares = valData.totalShares;
+                    var tokens = shares.times(valTokens).div(valTotalShares);
+                    delegations[valAddr] = {
+                      uatoms: tokens.toString(),
+                      shares: shares.toString()
+                    };
+                    totalDelegation = totalDelegation.add(tokens);
                   }
                 }
-              } catch (e) {
-                console.log('Error ', e, ' returning defaults');
               }
+            } catch (e) {
+              console.log('Error ', e, ' returning defaults');
+            }
 
-              return txContext;
-            }, function (e) {
-              return wrapError(_this3, e);
-            }));
+            txContext.delegations = delegations;
+            txContext.delegationsTotal = totalDelegation.toString();
+            return txContext;
+          }, function (e) {
+            return wrapError(_this4, e);
+          }));
 
-          case 3:
-          case "end":
-            return _context7.stop();
-        }
+        case 2:
+        case "end":
+          return _context8.stop();
       }
-    }, _callee7, this);
-  }));
-
-  return function (_x11) {
-    return _ref7.apply(this, arguments);
-  };
-}();
-
-CosmosDelegateTool.prototype.getAccountDelegations =
-/*#__PURE__*/
-function () {
-  var _ref8 = (0, _asyncToGenerator2["default"])(
-  /*#__PURE__*/
-  _regenerator["default"].mark(function _callee8(validators, addr) {
-    var _this4 = this;
-
-    var url;
-    return _regenerator["default"].wrap(function _callee8$(_context8) {
-      while (1) {
-        switch (_context8.prev = _context8.next) {
-          case 0:
-            url = "".concat(nodeURL(this), "/staking/delegators/").concat(addr.bech32, "/delegations");
-            return _context8.abrupt("return", _axios["default"].get(url).then(function (r) {
-              var txContext = {
-                delegations: {},
-                delegationsTotal: '0'
-              };
-              var delegations = {};
-              var totalDelegation = (0, _big["default"])(0);
-
-              try {
-                if (typeof r.data !== 'undefined' && r.data !== null) {
-                  for (var i = 0; i < r.data.length; i += 1) {
-                    var t = r.data[i];
-                    var valAddr = t.validator_address;
-
-                    if (valAddr in validators) {
-                      var shares = (0, _big["default"])(t.shares);
-                      var valData = validators[valAddr];
-                      var valTokens = valData.tokens;
-                      var valTotalShares = valData.totalShares;
-                      var tokens = shares.times(valTokens).div(valTotalShares);
-                      delegations[valAddr] = {
-                        uatoms: tokens.toString(),
-                        shares: shares.toString()
-                      };
-                      totalDelegation = totalDelegation.add(tokens);
-                    }
-                  }
-                }
-              } catch (e) {
-                console.log('Error ', e, ' returning defaults');
-              }
-
-              txContext.delegations = delegations;
-              txContext.delegationsTotal = totalDelegation.toString();
-              return txContext;
-            }, function (e) {
-              return wrapError(_this4, e);
-            }));
-
-          case 2:
-          case "end":
-            return _context8.stop();
-        }
-      }
-    }, _callee8, this);
-  }));
-
-  return function (_x12, _x13) {
-    return _ref8.apply(this, arguments);
-  };
-}(); // Retrieve atom balances from the network for a list of account
+    }
+  }, null, this);
+}; // Retrieve atom balances from the network for a list of account
 // Retrieve delegated/not-delegated balances for each account
 
 
-CosmosDelegateTool.prototype.retrieveBalances =
-/*#__PURE__*/
-function () {
-  var _ref9 = (0, _asyncToGenerator2["default"])(
-  /*#__PURE__*/
-  _regenerator["default"].mark(function _callee10(addressList) {
-    var _this5 = this;
+CosmosDelegateTool.prototype.retrieveBalances = function _callee10(addressList) {
+  var _this5 = this;
 
-    var validators, requestsBalance, requestsDelegations, balances, delegations, reply, i;
-    return _regenerator["default"].wrap(function _callee10$(_context10) {
-      while (1) {
-        switch (_context10.prev = _context10.next) {
-          case 0:
-            _context10.next = 2;
-            return this.retrieveValidators();
+  var validators, requestsBalance, requestsDelegations, balances, delegations, reply, i;
+  return _regenerator["default"].async(function _callee10$(_context10) {
+    while (1) {
+      switch (_context10.prev = _context10.next) {
+        case 0:
+          _context10.next = 2;
+          return _regenerator["default"].awrap(this.retrieveValidators());
 
-          case 2:
-            validators = _context10.sent;
-            // Get all balances
-            requestsBalance = addressList.map(
-            /*#__PURE__*/
-            function () {
-              var _ref10 = (0, _asyncToGenerator2["default"])(
-              /*#__PURE__*/
-              _regenerator["default"].mark(function _callee9(addr, index) {
-                var txContext;
-                return _regenerator["default"].wrap(function _callee9$(_context9) {
-                  while (1) {
-                    switch (_context9.prev = _context9.next) {
-                      case 0:
-                        _context9.next = 2;
-                        return _this5.getAccountInfo(addr);
+        case 2:
+          validators = _context10.sent;
+          // Get all balances
+          requestsBalance = addressList.map(function _callee9(addr, index) {
+            var txContext;
+            return _regenerator["default"].async(function _callee9$(_context9) {
+              while (1) {
+                switch (_context9.prev = _context9.next) {
+                  case 0:
+                    _context9.next = 2;
+                    return _regenerator["default"].awrap(_this5.getAccountInfo(addr));
 
-                      case 2:
-                        txContext = _context9.sent;
-                        return _context9.abrupt("return", Object.assign({}, addressList[index], txContext));
+                  case 2:
+                    txContext = _context9.sent;
+                    return _context9.abrupt("return", Object.assign({}, addressList[index], txContext));
 
-                      case 4:
-                      case "end":
-                        return _context9.stop();
-                    }
-                  }
-                }, _callee9);
-              }));
-
-              return function (_x15, _x16) {
-                return _ref10.apply(this, arguments);
-              };
-            }()); // eslint-disable-next-line max-len,no-unused-vars
-
-            requestsDelegations = addressList.map(function (addr, index) {
-              return _this5.getAccountDelegations(validators, addr);
-            }); // eslint-disable-next-line no-unused-vars,max-len
-
-            _context10.next = 7;
-            return Promise.all(requestsBalance);
-
-          case 7:
-            balances = _context10.sent;
-            _context10.next = 10;
-            return Promise.all(requestsDelegations);
-
-          case 10:
-            delegations = _context10.sent;
-            reply = [];
-
-            for (i = 0; i < addressList.length; i += 1) {
-              reply.push(Object.assign({}, delegations[i], balances[i]));
-            }
-
-            return _context10.abrupt("return", reply);
-
-          case 14:
-          case "end":
-            return _context10.stop();
-        }
-      }
-    }, _callee10, this);
-  }));
-
-  return function (_x14) {
-    return _ref9.apply(this, arguments);
-  };
-}(); // Retrieve atom rewards from the network for an account and validator
-
-
-CosmosDelegateTool.prototype.getRewards =
-/*#__PURE__*/
-function () {
-  var _ref11 = (0, _asyncToGenerator2["default"])(
-  /*#__PURE__*/
-  _regenerator["default"].mark(function _callee11(addr) {
-    var _this6 = this;
-
-    var url;
-    return _regenerator["default"].wrap(function _callee11$(_context11) {
-      while (1) {
-        switch (_context11.prev = _context11.next) {
-          case 0:
-            url = "".concat(nodeURL(this), "/distribution/delegators/").concat(addr.bech32, "/rewards");
-            return _context11.abrupt("return", _axios["default"].get(url).then(function (r) {
-              var reward = (0, _big["default"])(0);
-
-              try {
-                if (typeof r.data[0].amount !== 'undefined' && r.data !== null) {
-                  reward = r.data[0].amount;
+                  case 4:
+                  case "end":
+                    return _context9.stop();
                 }
-              } catch (e) {
-                console.log('Error ', e, ' returning defaults');
               }
+            });
+          }); // eslint-disable-next-line max-len,no-unused-vars
 
-              return reward;
-            }, function (e) {
-              return wrapError(_this6, e);
-            }));
+          requestsDelegations = addressList.map(function (addr, index) {
+            return _this5.getAccountDelegations(validators, addr);
+          }); // eslint-disable-next-line no-unused-vars,max-len
 
-          case 2:
-          case "end":
-            return _context11.stop();
-        }
+          _context10.next = 7;
+          return _regenerator["default"].awrap(Promise.all(requestsBalance));
+
+        case 7:
+          balances = _context10.sent;
+          _context10.next = 10;
+          return _regenerator["default"].awrap(Promise.all(requestsDelegations));
+
+        case 10:
+          delegations = _context10.sent;
+          reply = [];
+
+          for (i = 0; i < addressList.length; i += 1) {
+            reply.push(Object.assign({}, delegations[i], balances[i]));
+          }
+
+          return _context10.abrupt("return", reply);
+
+        case 14:
+        case "end":
+          return _context10.stop();
       }
-    }, _callee11, this);
-  }));
+    }
+  }, null, this);
+}; // Retrieve atom rewards from the network for an account and validator
 
-  return function (_x17) {
-    return _ref11.apply(this, arguments);
-  };
-}(); // Creates a new delegation tx based on the input parameters
+
+CosmosDelegateTool.prototype.getRewards = function _callee11(addr) {
+  var _this6 = this;
+
+  var url;
+  return _regenerator["default"].async(function _callee11$(_context11) {
+    while (1) {
+      switch (_context11.prev = _context11.next) {
+        case 0:
+          url = "".concat(nodeURL(this), "/distribution/delegators/").concat(addr.bech32, "/rewards");
+          return _context11.abrupt("return", _axios["default"].get(url).then(function (r) {
+            var reward = (0, _big["default"])(0);
+
+            try {
+              if (typeof r.data[0].amount !== 'undefined' && r.data !== null) {
+                reward = r.data[0].amount;
+              }
+            } catch (e) {
+              console.log('Error ', e, ' returning defaults');
+            }
+
+            return reward;
+          }, function (e) {
+            return wrapError(_this6, e);
+          }));
+
+        case 2:
+        case "end":
+          return _context11.stop();
+      }
+    }
+  }, null, this);
+}; // Creates a new delegation tx based on the input parameters
 // this function expect that retrieve balances has been called before
 
 
-CosmosDelegateTool.prototype.txCreateDelegate =
-/*#__PURE__*/
-function () {
-  var _ref12 = (0, _asyncToGenerator2["default"])(
-  /*#__PURE__*/
-  _regenerator["default"].mark(function _callee12(txContext, validatorBech32, uatomAmount, memo) {
-    var accountInfo;
-    return _regenerator["default"].wrap(function _callee12$(_context12) {
-      while (1) {
-        switch (_context12.prev = _context12.next) {
-          case 0:
-            if (!(typeof txContext === 'undefined')) {
-              _context12.next = 2;
-              break;
-            }
+CosmosDelegateTool.prototype.txCreateDelegate = function _callee12(txContext, validatorBech32, uatomAmount, memo) {
+  var accountInfo;
+  return _regenerator["default"].async(function _callee12$(_context12) {
+    while (1) {
+      switch (_context12.prev = _context12.next) {
+        case 0:
+          if (!(typeof txContext === 'undefined')) {
+            _context12.next = 2;
+            break;
+          }
 
-            throw new Error('undefined txContext');
+          throw new Error('undefined txContext');
 
-          case 2:
-            if (!(typeof txContext.bech32 === 'undefined')) {
-              _context12.next = 4;
-              break;
-            }
+        case 2:
+          if (!(typeof txContext.bech32 === 'undefined')) {
+            _context12.next = 4;
+            break;
+          }
 
-            throw new Error('txContext does not contain the source address (bech32)');
+          throw new Error('txContext does not contain the source address (bech32)');
 
-          case 4:
-            _context12.next = 6;
-            return this.getAccountInfo(txContext);
+        case 4:
+          _context12.next = 6;
+          return _regenerator["default"].awrap(this.getAccountInfo(txContext));
 
-          case 6:
-            accountInfo = _context12.sent;
-            // eslint-disable-next-line no-param-reassign
-            txContext.accountNumber = accountInfo.accountNumber; // eslint-disable-next-line no-param-reassign
+        case 6:
+          accountInfo = _context12.sent;
+          // eslint-disable-next-line no-param-reassign
+          txContext.accountNumber = accountInfo.accountNumber; // eslint-disable-next-line no-param-reassign
 
-            txContext.sequence = accountInfo.sequence;
-            return _context12.abrupt("return", _cosmos["default"].createDelegate(txContext, validatorBech32, (0, _big["default"])(uatomAmount), memo));
+          txContext.sequence = accountInfo.sequence;
+          return _context12.abrupt("return", _cosmos["default"].createDelegate(txContext, validatorBech32, (0, _big["default"])(uatomAmount), memo));
 
-          case 10:
-          case "end":
-            return _context12.stop();
-        }
+        case 10:
+        case "end":
+          return _context12.stop();
       }
-    }, _callee12, this);
-  }));
-
-  return function (_x18, _x19, _x20, _x21) {
-    return _ref12.apply(this, arguments);
-  };
-}(); // Creates a new staking tx based on the input parameters
+    }
+  }, null, this);
+}; // Creates a new staking tx based on the input parameters
 // this function expect that retrieve balances has been called before
 
 
-CosmosDelegateTool.prototype.txCreateRedelegate =
-/*#__PURE__*/
-function () {
-  var _ref13 = (0, _asyncToGenerator2["default"])(
-  /*#__PURE__*/
-  _regenerator["default"].mark(function _callee13(txContext, validatorSourceBech32, validatorDestBech32, uatomAmount, memo) {
-    var accountInfo;
-    return _regenerator["default"].wrap(function _callee13$(_context13) {
-      while (1) {
-        switch (_context13.prev = _context13.next) {
-          case 0:
-            if (!(typeof txContext === 'undefined')) {
-              _context13.next = 2;
-              break;
-            }
+CosmosDelegateTool.prototype.txCreateRedelegate = function _callee13(txContext, validatorSourceBech32, validatorDestBech32, uatomAmount, memo) {
+  var accountInfo;
+  return _regenerator["default"].async(function _callee13$(_context13) {
+    while (1) {
+      switch (_context13.prev = _context13.next) {
+        case 0:
+          if (!(typeof txContext === 'undefined')) {
+            _context13.next = 2;
+            break;
+          }
 
-            throw new Error('undefined txContext');
+          throw new Error('undefined txContext');
 
-          case 2:
-            if (!(typeof txContext.bech32 === 'undefined')) {
-              _context13.next = 4;
-              break;
-            }
+        case 2:
+          if (!(typeof txContext.bech32 === 'undefined')) {
+            _context13.next = 4;
+            break;
+          }
 
-            throw new Error('txContext does not contain the source address (bech32)');
+          throw new Error('txContext does not contain the source address (bech32)');
 
-          case 4:
-            _context13.next = 6;
-            return this.getAccountInfo(txContext);
+        case 4:
+          _context13.next = 6;
+          return _regenerator["default"].awrap(this.getAccountInfo(txContext));
 
-          case 6:
-            accountInfo = _context13.sent;
-            // eslint-disable-next-line no-param-reassign
-            txContext.accountNumber = accountInfo.accountNumber; // eslint-disable-next-line no-param-reassign
+        case 6:
+          accountInfo = _context13.sent;
+          // eslint-disable-next-line no-param-reassign
+          txContext.accountNumber = accountInfo.accountNumber; // eslint-disable-next-line no-param-reassign
 
-            txContext.sequence = accountInfo.sequence; // Convert from uatoms to shares
+          txContext.sequence = accountInfo.sequence; // Convert from uatoms to shares
 
-            return _context13.abrupt("return", _cosmos["default"].createRedelegate(txContext, validatorSourceBech32, validatorDestBech32, uatomAmount, memo));
+          return _context13.abrupt("return", _cosmos["default"].createRedelegate(txContext, validatorSourceBech32, validatorDestBech32, uatomAmount, memo));
 
-          case 10:
-          case "end":
-            return _context13.stop();
-        }
+        case 10:
+        case "end":
+          return _context13.stop();
       }
-    }, _callee13, this);
-  }));
-
-  return function (_x22, _x23, _x24, _x25, _x26) {
-    return _ref13.apply(this, arguments);
-  };
-}(); // Creates a new undelegation tx based on the input parameters
+    }
+  }, null, this);
+}; // Creates a new undelegation tx based on the input parameters
 // this function expect that retrieve balances has been called before
 
 
-CosmosDelegateTool.prototype.txCreateUndelegate =
-/*#__PURE__*/
-function () {
-  var _ref14 = (0, _asyncToGenerator2["default"])(
-  /*#__PURE__*/
-  _regenerator["default"].mark(function _callee14(txContext, validatorBech32, uatomAmount, memo) {
-    var accountInfo;
-    return _regenerator["default"].wrap(function _callee14$(_context14) {
-      while (1) {
-        switch (_context14.prev = _context14.next) {
-          case 0:
-            if (!(typeof txContext === 'undefined')) {
-              _context14.next = 2;
-              break;
-            }
+CosmosDelegateTool.prototype.txCreateUndelegate = function _callee14(txContext, validatorBech32, uatomAmount, memo) {
+  var accountInfo;
+  return _regenerator["default"].async(function _callee14$(_context14) {
+    while (1) {
+      switch (_context14.prev = _context14.next) {
+        case 0:
+          if (!(typeof txContext === 'undefined')) {
+            _context14.next = 2;
+            break;
+          }
 
-            throw new Error('undefined txContext');
+          throw new Error('undefined txContext');
 
-          case 2:
-            if (!(typeof txContext.bech32 === 'undefined')) {
-              _context14.next = 4;
-              break;
-            }
+        case 2:
+          if (!(typeof txContext.bech32 === 'undefined')) {
+            _context14.next = 4;
+            break;
+          }
 
-            throw new Error('txContext does not contain the source address (bech32)');
+          throw new Error('txContext does not contain the source address (bech32)');
 
-          case 4:
-            _context14.next = 6;
-            return this.getAccountInfo(txContext);
+        case 4:
+          _context14.next = 6;
+          return _regenerator["default"].awrap(this.getAccountInfo(txContext));
 
-          case 6:
-            accountInfo = _context14.sent;
-            // eslint-disable-next-line no-param-reassign
-            txContext.accountNumber = accountInfo.accountNumber; // eslint-disable-next-line no-param-reassign
+        case 6:
+          accountInfo = _context14.sent;
+          // eslint-disable-next-line no-param-reassign
+          txContext.accountNumber = accountInfo.accountNumber; // eslint-disable-next-line no-param-reassign
 
-            txContext.sequence = accountInfo.sequence;
-            return _context14.abrupt("return", _cosmos["default"].createUndelegate(txContext, validatorBech32, uatomAmount, memo));
+          txContext.sequence = accountInfo.sequence;
+          return _context14.abrupt("return", _cosmos["default"].createUndelegate(txContext, validatorBech32, uatomAmount, memo));
 
-          case 10:
-          case "end":
-            return _context14.stop();
-        }
+        case 10:
+        case "end":
+          return _context14.stop();
       }
-    }, _callee14, this);
-  }));
-
-  return function (_x27, _x28, _x29, _x30) {
-    return _ref14.apply(this, arguments);
-  };
-}(); // Creates a new withdrawl tx based on the input parameters
+    }
+  }, null, this);
+}; // Creates a new withdrawl tx based on the input parameters
 
 
-CosmosDelegateTool.prototype.txCreateWithdrawl =
-/*#__PURE__*/
-function () {
-  var _ref15 = (0, _asyncToGenerator2["default"])(
-  /*#__PURE__*/
-  _regenerator["default"].mark(function _callee15(txContext, validatorBech32, memo) {
-    var accountInfo;
-    return _regenerator["default"].wrap(function _callee15$(_context15) {
-      while (1) {
-        switch (_context15.prev = _context15.next) {
-          case 0:
-            if (!(typeof txContext === 'undefined')) {
-              _context15.next = 2;
-              break;
-            }
+CosmosDelegateTool.prototype.txCreateWithdrawl = function _callee15(txContext, validatorBech32, memo) {
+  var accountInfo;
+  return _regenerator["default"].async(function _callee15$(_context15) {
+    while (1) {
+      switch (_context15.prev = _context15.next) {
+        case 0:
+          if (!(typeof txContext === 'undefined')) {
+            _context15.next = 2;
+            break;
+          }
 
-            throw new Error('undefined txContext');
+          throw new Error('undefined txContext');
 
-          case 2:
-            if (!(typeof txContext.bech32 === 'undefined')) {
-              _context15.next = 4;
-              break;
-            }
+        case 2:
+          if (!(typeof txContext.bech32 === 'undefined')) {
+            _context15.next = 4;
+            break;
+          }
 
-            throw new Error('txContext does not contain the source address (bech32)');
+          throw new Error('txContext does not contain the source address (bech32)');
 
-          case 4:
-            _context15.next = 6;
-            return this.getAccountInfo(txContext);
+        case 4:
+          _context15.next = 6;
+          return _regenerator["default"].awrap(this.getAccountInfo(txContext));
 
-          case 6:
-            accountInfo = _context15.sent;
-            // eslint-disable-next-line no-param-reassign
-            txContext.accountNumber = accountInfo.accountNumber; // eslint-disable-next-line no-param-reassign
+        case 6:
+          accountInfo = _context15.sent;
+          // eslint-disable-next-line no-param-reassign
+          txContext.accountNumber = accountInfo.accountNumber; // eslint-disable-next-line no-param-reassign
 
-            txContext.sequence = accountInfo.sequence;
-            return _context15.abrupt("return", _cosmos["default"].createWithdrawl(txContext, validatorBech32, memo));
+          txContext.sequence = accountInfo.sequence;
+          return _context15.abrupt("return", _cosmos["default"].createWithdrawl(txContext, validatorBech32, memo));
 
-          case 10:
-          case "end":
-            return _context15.stop();
-        }
+        case 10:
+        case "end":
+          return _context15.stop();
       }
-    }, _callee15, this);
-  }));
-
-  return function (_x31, _x32, _x33) {
-    return _ref15.apply(this, arguments);
-  };
-}(); // Relays a signed transaction and returns a transaction hash
+    }
+  }, null, this);
+}; // Relays a signed transaction and returns a transaction hash
 
 
-CosmosDelegateTool.prototype.txSubmit =
-/*#__PURE__*/
-function () {
-  var _ref16 = (0, _asyncToGenerator2["default"])(
-  /*#__PURE__*/
-  _regenerator["default"].mark(function _callee16(signedTx) {
-    var _this7 = this;
+CosmosDelegateTool.prototype.txSubmit = function _callee16(signedTx) {
+  var _this7 = this;
 
-    var txBody, url;
-    return _regenerator["default"].wrap(function _callee16$(_context16) {
-      while (1) {
-        switch (_context16.prev = _context16.next) {
-          case 0:
-            txBody = {
-              tx: signedTx.value,
-              mode: 'async'
-            };
-            url = "".concat(nodeURL(this), "/txs");
-            return _context16.abrupt("return", _axios["default"].post(url, JSON.stringify(txBody)).then(function (r) {
-              return r;
-            }, function (e) {
-              return wrapError(_this7, e);
-            }));
+  var txBody, url;
+  return _regenerator["default"].async(function _callee16$(_context16) {
+    while (1) {
+      switch (_context16.prev = _context16.next) {
+        case 0:
+          txBody = {
+            tx: signedTx.value,
+            mode: 'async'
+          };
+          url = "".concat(nodeURL(this), "/txs");
+          return _context16.abrupt("return", _axios["default"].post(url, JSON.stringify(txBody)).then(function (r) {
+            return r;
+          }, function (e) {
+            return wrapError(_this7, e);
+          }));
 
-          case 3:
-          case "end":
-            return _context16.stop();
-        }
+        case 3:
+        case "end":
+          return _context16.stop();
       }
-    }, _callee16, this);
-  }));
-
-  return function (_x34) {
-    return _ref16.apply(this, arguments);
-  };
-}(); // Retrieve the status of a transaction hash
+    }
+  }, null, this);
+}; // Retrieve the status of a transaction hash
 
 
-CosmosDelegateTool.prototype.txStatus =
-/*#__PURE__*/
-function () {
-  var _ref17 = (0, _asyncToGenerator2["default"])(
-  /*#__PURE__*/
-  _regenerator["default"].mark(function _callee17(txHash) {
-    var _this8 = this;
+CosmosDelegateTool.prototype.txStatus = function _callee17(txHash) {
+  var _this8 = this;
 
-    var url;
-    return _regenerator["default"].wrap(function _callee17$(_context17) {
-      while (1) {
-        switch (_context17.prev = _context17.next) {
-          case 0:
-            url = "".concat(nodeURL(this), "/txs/").concat(txHash);
-            return _context17.abrupt("return", _axios["default"].get(url).then(function (r) {
-              return r.data;
-            }, function (e) {
-              return wrapError(_this8, e);
-            }));
+  var url;
+  return _regenerator["default"].async(function _callee17$(_context17) {
+    while (1) {
+      switch (_context17.prev = _context17.next) {
+        case 0:
+          url = "".concat(nodeURL(this), "/txs/").concat(txHash);
+          return _context17.abrupt("return", _axios["default"].get(url).then(function (r) {
+            return r.data;
+          }, function (e) {
+            return wrapError(_this8, e);
+          }));
 
-          case 2:
-          case "end":
-            return _context17.stop();
-        }
+        case 2:
+        case "end":
+          return _context17.stop();
       }
-    }, _callee17, this);
-  }));
-
-  return function (_x35) {
-    return _ref17.apply(this, arguments);
-  };
-}();
+    }
+  }, null, this);
+};
 
 module.exports = CosmosDelegateTool;
