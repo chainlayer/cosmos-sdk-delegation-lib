@@ -217,7 +217,17 @@ IrisDelegateTool.prototype.retrieveValidators = async function () {
             validatorData.totalShares = Big(t.delegator_shares);
             validators[t.operator_address] = validatorData;
         }
-        return validators;
+        const url2 = `${nodeURL(this)}/stake/validators?page=2`;
+        return axios.get(url2).then((r) => {
+            for (let i = 0; i < r.data.length; i += 1) {
+                const validatorData = {};
+                const t = r.data[i];
+                validatorData.tokens = Big(t.tokens);
+                validatorData.totalShares = Big(t.delegator_shares);
+                validators[t.operator_address] = validatorData;
+            }
+            return validators;
+        }, e => wrapError(this, e));
     }, e => wrapError(this, e));
 };
 

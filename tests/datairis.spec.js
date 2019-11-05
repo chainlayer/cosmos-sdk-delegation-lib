@@ -82,6 +82,20 @@ test('get multiple accounts', async () => {
             },
         ],
     );
+    mock.onGet('mockNodeURL/stake/validators?page=2').reply(
+        200, [
+            {
+                operator_address: 'some_other_validator_bech32_2',
+                tokens: '123456789',
+                delegator_shares: '123456789',
+            },
+            {
+                operator_address: 'some_other_validator_bech32_3',
+                tokens: '2222',
+                delegator_shares: '4444',
+            },
+        ],
+    );
     mock.onGet('mockNodeURL/bank/accounts/cosmos1k7ezdfu3j69npzhccs6m4hu99pydagsva0h0gp').reply(
         200, {
             value: {

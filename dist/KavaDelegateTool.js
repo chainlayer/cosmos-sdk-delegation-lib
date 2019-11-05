@@ -8,7 +8,7 @@ var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"))
 
 var _ledgerCosmosJs = _interopRequireWildcard(require("ledger-cosmos-js"));
 
-var _iris = _interopRequireDefault(require("./iris"));
+var _kava = _interopRequireDefault(require("./kava"));
 
 var _secp256k = _interopRequireDefault(require("secp256k1"));
 
@@ -16,10 +16,9 @@ var _axios = _interopRequireDefault(require("axios"));
 
 var _big = _interopRequireDefault(require("big.js"));
 
-var _cosmos = _interopRequireDefault(require("./cosmos"));
-
 /** ******************************************************************************
  *  (c) 2019 ChainLayer
+ *  Original (c) 2019 ZondaX GmbH
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -34,7 +33,7 @@ var _cosmos = _interopRequireDefault(require("./cosmos"));
  *  limitations under the License.
  ******************************************************************************* */
 _big["default"].PE = 30;
-var defaultHrp = 'iaa';
+var defaultHrp = 'kava';
 
 function wrapError(cdt, e) {
   try {
@@ -76,7 +75,7 @@ function connectedOrThrow(cdt) {
   }
 }
 
-var IrisDelegateTool = function IrisDelegateTool(transport) {
+var KavaDelegateTool = function KavaDelegateTool(transport) {
   // eslint-disable-next-line camelcase
   this.connected = false;
   this.lastError = 'No error';
@@ -90,27 +89,27 @@ var IrisDelegateTool = function IrisDelegateTool(transport) {
 }; // eslint-disable-next-line no-unused-vars
 
 
-IrisDelegateTool.prototype.getHrp = function () {
+KavaDelegateTool.prototype.getHrp = function () {
   return defaultHrp;
 }; // eslint-disable-next-line no-unused-vars
 
 
-IrisDelegateTool.prototype.getDefaultDenom = function () {
-  return _iris["default"].DEFAULT_DENOM; // 'iris-atto'
+KavaDelegateTool.prototype.getDefaultDenom = function () {
+  return _kava["default"].DEFAULT_DENOM; // 'uatom'
 }; // eslint-disable-next-line no-unused-vars
 
 
-IrisDelegateTool.prototype.setNodeURL = function (resturl) {
+KavaDelegateTool.prototype.setNodeURL = function (resturl) {
   this.resturl = resturl;
 }; // eslint-disable-next-line no-unused-vars
 
 
-IrisDelegateTool.prototype.setHrp = function (hrp) {
+KavaDelegateTool.prototype.setHrp = function (hrp) {
   this.hrp = hrp;
 }; // Detect when a ledger device is connected and verify the cosmos app is running.
 
 
-IrisDelegateTool.prototype.connect = function _callee() {
+KavaDelegateTool.prototype.connect = function _callee() {
   var appInfo, version, major, minor;
   return _regenerator["default"].async(function _callee$(_context) {
     while (1) {
@@ -192,7 +191,7 @@ IrisDelegateTool.prototype.connect = function _callee() {
 }; // Returns a signed transaction ready to be relayed
 
 
-IrisDelegateTool.prototype.sign = function _callee2(unsignedTx, txContext) {
+KavaDelegateTool.prototype.sign = function _callee2(unsignedTx, txContext) {
   var bytesToSign, response, sig;
   return _regenerator["default"].async(function _callee2$(_context2) {
     while (1) {
@@ -209,7 +208,7 @@ IrisDelegateTool.prototype.sign = function _callee2(unsignedTx, txContext) {
           throw new Error('context should include the account path');
 
         case 4:
-          bytesToSign = _iris["default"].getBytesToSign(unsignedTx, txContext);
+          bytesToSign = _kava["default"].getBytesToSign(unsignedTx, txContext);
           console.log(bytesToSign);
           _context2.next = 8;
           return _regenerator["default"].awrap(this.app.sign(txContext.path, bytesToSign));
@@ -227,7 +226,7 @@ IrisDelegateTool.prototype.sign = function _callee2(unsignedTx, txContext) {
 
         case 12:
           sig = _secp256k["default"].signatureImport(response.signature);
-          return _context2.abrupt("return", _iris["default"].applySignature(unsignedTx, txContext, sig));
+          return _context2.abrupt("return", _kava["default"].applySignature(unsignedTx, txContext, sig));
 
         case 14:
         case "end":
@@ -238,7 +237,7 @@ IrisDelegateTool.prototype.sign = function _callee2(unsignedTx, txContext) {
 }; // Retrieve public key and bech32 address
 
 
-IrisDelegateTool.prototype.retrieveAddress = function _callee3(network, account, change, index) {
+KavaDelegateTool.prototype.retrieveAddress = function _callee3(network, account, change, index) {
   var path, pk;
   return _regenerator["default"].async(function _callee3$(_context3) {
     while (1) {
@@ -277,7 +276,7 @@ IrisDelegateTool.prototype.retrieveAddress = function _callee3(network, account,
 // eslint-disable-next-line max-len
 
 
-IrisDelegateTool.prototype.scanAddresses = function _callee4(minAccount, maxAccount, minIndex, maxIndex) {
+KavaDelegateTool.prototype.scanAddresses = function _callee4(minAccount, maxAccount, minIndex, maxIndex) {
   var answer, account, index, tmp;
   return _regenerator["default"].async(function _callee4$(_context4) {
     while (1) {
@@ -328,7 +327,7 @@ IrisDelegateTool.prototype.scanAddresses = function _callee4(minAccount, maxAcco
   }, null, this);
 };
 
-IrisDelegateTool.prototype.getPrice = function _callee5() {
+KavaDelegateTool.prototype.getPrice = function _callee5() {
   var _this = this;
 
   var url;
@@ -336,7 +335,7 @@ IrisDelegateTool.prototype.getPrice = function _callee5() {
     while (1) {
       switch (_context5.prev = _context5.next) {
         case 0:
-          url = "https://min-api.cryptocompare.com/data/price?fsym=IRIS&tsyms=USD";
+          url = "https://min-api.cryptocompare.com/data/price?fsym=KAVA&tsyms=USD";
           return _context5.abrupt("return", _axios["default"].get(url).then(function (r) {
             return r.data.USD;
           }, function (e) {
@@ -351,7 +350,7 @@ IrisDelegateTool.prototype.getPrice = function _callee5() {
   });
 };
 
-IrisDelegateTool.prototype.retrieveValidators = function _callee6() {
+KavaDelegateTool.prototype.retrieveValidators = function _callee6() {
   var _this2 = this;
 
   var url;
@@ -359,7 +358,7 @@ IrisDelegateTool.prototype.retrieveValidators = function _callee6() {
     while (1) {
       switch (_context6.prev = _context6.next) {
         case 0:
-          url = "".concat(nodeURL(this), "/stake/validators");
+          url = "".concat(nodeURL(this), "/staking/validators");
           return _context6.abrupt("return", _axios["default"].get(url).then(function (r) {
             var validators = {};
 
@@ -371,20 +370,7 @@ IrisDelegateTool.prototype.retrieveValidators = function _callee6() {
               validators[t.operator_address] = validatorData;
             }
 
-            var url2 = "".concat(nodeURL(_this2), "/stake/validators?page=2");
-            return _axios["default"].get(url2).then(function (r) {
-              for (var _i = 0; _i < r.data.length; _i += 1) {
-                var _validatorData = {};
-                var _t = r.data[_i];
-                _validatorData.tokens = (0, _big["default"])(_t.tokens);
-                _validatorData.totalShares = (0, _big["default"])(_t.delegator_shares);
-                validators[_t.operator_address] = _validatorData;
-              }
-
-              return validators;
-            }, function (e) {
-              return wrapError(_this2, e);
-            });
+            return validators;
           }, function (e) {
             return wrapError(_this2, e);
           }));
@@ -397,7 +383,7 @@ IrisDelegateTool.prototype.retrieveValidators = function _callee6() {
   }, null, this);
 };
 
-IrisDelegateTool.prototype.getAccountInfo = function _callee7(addr) {
+KavaDelegateTool.prototype.getAccountInfo = function _callee7(addr) {
   var _this3 = this;
 
   var url, txContext;
@@ -405,7 +391,7 @@ IrisDelegateTool.prototype.getAccountInfo = function _callee7(addr) {
     while (1) {
       switch (_context7.prev = _context7.next) {
         case 0:
-          url = "".concat(nodeURL(this), "/bank/accounts/").concat(addr.bech32);
+          url = "".concat(nodeURL(this), "/auth/accounts/").concat(addr.bech32);
           txContext = {
             sequence: '0',
             accountNumber: '0',
@@ -419,7 +405,7 @@ IrisDelegateTool.prototype.getAccountInfo = function _callee7(addr) {
 
                 if (r.data.value.coins !== null) {
                   var tmp = r.data.value.coins.filter(function (x) {
-                    return x.denom === _iris["default"].DEFAULT_DENOM;
+                    return x.denom === _kava["default"].DEFAULT_DENOM;
                   });
 
                   if (tmp.length > 0) {
@@ -444,7 +430,7 @@ IrisDelegateTool.prototype.getAccountInfo = function _callee7(addr) {
   }, null, this);
 };
 
-IrisDelegateTool.prototype.getAccountDelegations = function _callee8(validators, addr) {
+KavaDelegateTool.prototype.getAccountDelegations = function _callee8(validators, addr) {
   var _this4 = this;
 
   var url;
@@ -452,7 +438,7 @@ IrisDelegateTool.prototype.getAccountDelegations = function _callee8(validators,
     while (1) {
       switch (_context8.prev = _context8.next) {
         case 0:
-          url = "".concat(nodeURL(this), "/stake/delegators/").concat(addr.bech32, "/delegations");
+          url = "".concat(nodeURL(this), "/staking/delegators/").concat(addr.bech32, "/delegations");
           return _context8.abrupt("return", _axios["default"].get(url).then(function (r) {
             var txContext = {
               delegations: {},
@@ -465,7 +451,7 @@ IrisDelegateTool.prototype.getAccountDelegations = function _callee8(validators,
               if (typeof r.data !== 'undefined' && r.data !== null) {
                 for (var i = 0; i < r.data.length; i += 1) {
                   var t = r.data[i];
-                  var valAddr = t.validator_addr;
+                  var valAddr = t.validator_address;
 
                   if (valAddr in validators) {
                     var shares = (0, _big["default"])(t.shares);
@@ -474,7 +460,7 @@ IrisDelegateTool.prototype.getAccountDelegations = function _callee8(validators,
                     var valTotalShares = valData.totalShares;
                     var tokens = shares.times(valTokens).div(valTotalShares);
                     delegations[valAddr] = {
-                      irisatto: tokens.toString(),
+                      uatoms: tokens.toString(),
                       shares: shares.toString()
                     };
                     totalDelegation = totalDelegation.add(tokens);
@@ -502,7 +488,7 @@ IrisDelegateTool.prototype.getAccountDelegations = function _callee8(validators,
 // Retrieve delegated/not-delegated balances for each account
 
 
-IrisDelegateTool.prototype.retrieveBalances = function _callee10(addressList) {
+KavaDelegateTool.prototype.retrieveBalances = function _callee10(addressList) {
   var _this5 = this;
 
   var validators, requestsBalance, requestsDelegations, balances, delegations, reply, i;
@@ -568,7 +554,7 @@ IrisDelegateTool.prototype.retrieveBalances = function _callee10(addressList) {
 }; // Retrieve atom rewards from the network for an account and validator
 
 
-IrisDelegateTool.prototype.getRewards = function _callee11(addr) {
+KavaDelegateTool.prototype.getRewards = function _callee11(addr) {
   var _this6 = this;
 
   var url;
@@ -576,13 +562,13 @@ IrisDelegateTool.prototype.getRewards = function _callee11(addr) {
     while (1) {
       switch (_context11.prev = _context11.next) {
         case 0:
-          url = "".concat(nodeURL(this), "/distribution/").concat(addr.bech32, "/rewards");
+          url = "".concat(nodeURL(this), "/distribution/delegators/").concat(addr.bech32, "/rewards");
           return _context11.abrupt("return", _axios["default"].get(url).then(function (r) {
             var reward = (0, _big["default"])(0);
 
             try {
-              if (typeof r.data.total[0] !== 'undefined' && r.data !== null) {
-                reward = r.data.total[0].amount;
+              if (typeof r.data[0].amount !== 'undefined' && r.data !== null) {
+                reward = r.data[0].amount;
               }
             } catch (e) {
               console.log('Error ', e, ' returning defaults');
@@ -603,7 +589,7 @@ IrisDelegateTool.prototype.getRewards = function _callee11(addr) {
 // this function expect that retrieve balances has been called before
 
 
-IrisDelegateTool.prototype.txCreateDelegate = function _callee12(txContext, validatorBech32, uatomAmount, memo) {
+KavaDelegateTool.prototype.txCreateDelegate = function _callee12(txContext, validatorBech32, uatomAmount, memo) {
   var accountInfo;
   return _regenerator["default"].async(function _callee12$(_context12) {
     while (1) {
@@ -634,7 +620,7 @@ IrisDelegateTool.prototype.txCreateDelegate = function _callee12(txContext, vali
           txContext.accountNumber = accountInfo.accountNumber; // eslint-disable-next-line no-param-reassign
 
           txContext.sequence = accountInfo.sequence;
-          return _context12.abrupt("return", _iris["default"].createDelegate(txContext, validatorBech32, (0, _big["default"])(uatomAmount), memo));
+          return _context12.abrupt("return", _kava["default"].createDelegate(txContext, validatorBech32, (0, _big["default"])(uatomAmount), memo));
 
         case 10:
         case "end":
@@ -646,7 +632,7 @@ IrisDelegateTool.prototype.txCreateDelegate = function _callee12(txContext, vali
 // this function expect that retrieve balances has been called before
 
 
-IrisDelegateTool.prototype.txCreateRedelegate = function _callee13(txContext, validatorSourceBech32, validatorDestBech32, uatomAmount, memo) {
+KavaDelegateTool.prototype.txCreateRedelegate = function _callee13(txContext, validatorSourceBech32, validatorDestBech32, uatomAmount, memo) {
   var accountInfo;
   return _regenerator["default"].async(function _callee13$(_context13) {
     while (1) {
@@ -678,7 +664,7 @@ IrisDelegateTool.prototype.txCreateRedelegate = function _callee13(txContext, va
 
           txContext.sequence = accountInfo.sequence; // Convert from uatoms to shares
 
-          return _context13.abrupt("return", _iris["default"].createRedelegate(txContext, validatorSourceBech32, validatorDestBech32, (0, _big["default"])(uatomAmount), memo));
+          return _context13.abrupt("return", _kava["default"].createRedelegate(txContext, validatorSourceBech32, validatorDestBech32, uatomAmount, memo));
 
         case 10:
         case "end":
@@ -690,7 +676,7 @@ IrisDelegateTool.prototype.txCreateRedelegate = function _callee13(txContext, va
 // this function expect that retrieve balances has been called before
 
 
-IrisDelegateTool.prototype.txCreateUndelegate = function _callee14(txContext, validatorBech32, uatomAmount, memo) {
+KavaDelegateTool.prototype.txCreateUndelegate = function _callee14(txContext, validatorBech32, uatomAmount, memo) {
   var accountInfo;
   return _regenerator["default"].async(function _callee14$(_context14) {
     while (1) {
@@ -721,7 +707,7 @@ IrisDelegateTool.prototype.txCreateUndelegate = function _callee14(txContext, va
           txContext.accountNumber = accountInfo.accountNumber; // eslint-disable-next-line no-param-reassign
 
           txContext.sequence = accountInfo.sequence;
-          return _context14.abrupt("return", _iris["default"].createUndelegate(txContext, validatorBech32, (0, _big["default"])(uatomAmount), memo));
+          return _context14.abrupt("return", _kava["default"].createUndelegate(txContext, validatorBech32, uatomAmount, memo));
 
         case 10:
         case "end":
@@ -732,7 +718,7 @@ IrisDelegateTool.prototype.txCreateUndelegate = function _callee14(txContext, va
 }; // Creates a new withdrawl tx based on the input parameters
 
 
-IrisDelegateTool.prototype.txCreateWithdrawl = function _callee15(txContext, memo) {
+KavaDelegateTool.prototype.txCreateWithdrawl = function _callee15(txContext, validatorBech32, memo) {
   var accountInfo;
   return _regenerator["default"].async(function _callee15$(_context15) {
     while (1) {
@@ -763,7 +749,7 @@ IrisDelegateTool.prototype.txCreateWithdrawl = function _callee15(txContext, mem
           txContext.accountNumber = accountInfo.accountNumber; // eslint-disable-next-line no-param-reassign
 
           txContext.sequence = accountInfo.sequence;
-          return _context15.abrupt("return", _iris["default"].createWithdrawl(txContext, memo));
+          return _context15.abrupt("return", _kava["default"].createWithdrawl(txContext, validatorBech32, memo));
 
         case 10:
         case "end":
@@ -774,7 +760,7 @@ IrisDelegateTool.prototype.txCreateWithdrawl = function _callee15(txContext, mem
 }; // Relays a signed transaction and returns a transaction hash
 
 
-IrisDelegateTool.prototype.txSubmit = function _callee16(signedTx) {
+KavaDelegateTool.prototype.txSubmit = function _callee16(signedTx) {
   var _this7 = this;
 
   var txBody, url;
@@ -786,7 +772,7 @@ IrisDelegateTool.prototype.txSubmit = function _callee16(signedTx) {
             tx: signedTx.value,
             mode: 'async'
           };
-          url = "".concat(nodeURL(this), "/tx/broadcast");
+          url = "".concat(nodeURL(this), "/txs");
           return _context16.abrupt("return", _axios["default"].post(url, JSON.stringify(txBody)).then(function (r) {
             return r;
           }, function (e) {
@@ -802,7 +788,7 @@ IrisDelegateTool.prototype.txSubmit = function _callee16(signedTx) {
 }; // Retrieve the status of a transaction hash
 
 
-IrisDelegateTool.prototype.txStatus = function _callee17(txHash) {
+KavaDelegateTool.prototype.txStatus = function _callee17(txHash) {
   var _this8 = this;
 
   var url;
@@ -825,4 +811,4 @@ IrisDelegateTool.prototype.txStatus = function _callee17(txHash) {
   }, null, this);
 };
 
-module.exports = IrisDelegateTool;
+module.exports = KavaDelegateTool;
