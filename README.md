@@ -12,6 +12,9 @@ Works for Iris, Terra and Cosmos. Other networks to be added
 * add package to package.json
 * import correct library ``` import IrisDelegateTool from "delegation-js"; ```
 
+## Version history
+* Version 1.2.0 Fixed for new Terra and Cosmos release
+
 ## Copyright
 * Copyright (c) 2019 ChainLayer
 * Original copyright (c) 2019 ZondaX GmbH

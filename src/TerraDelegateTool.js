@@ -210,9 +210,9 @@ TerraDelegateTool.prototype.retrieveValidators = async function () {
     const url = `${nodeURL(this)}/staking/validators`;
     return axios.get(url).then((r) => {
         const validators = {};
-        for (let i = 0; i < r.data.length; i += 1) {
+        for (let i = 0; i < r.data.result.length; i += 1) {
             const validatorData = {};
-            const t = r.data[i];
+            const t = r.data.result[i];
             validatorData.tokens = Big(t.tokens);
             validatorData.totalShares = Big(t.delegator_shares);
             validators[t.operator_address] = validatorData;
@@ -223,7 +223,6 @@ TerraDelegateTool.prototype.retrieveValidators = async function () {
 
 TerraDelegateTool.prototype.getAccountInfo = async function (addr) {
     const url = `${nodeURL(this)}/auth/accounts/${addr.bech32}`;
-
     const txContext = {
         sequence: '0',
         accountNumber: '0',
@@ -232,12 +231,12 @@ TerraDelegateTool.prototype.getAccountInfo = async function (addr) {
 
     return axios.get(url).then((r) => {
         try {
-            if (typeof r.data !== 'undefined' && typeof r.data.value !== 'undefined') {
-                txContext.sequence = Number(r.data.value.sequence).toString();
-                txContext.accountNumber = Number(r.data.value.account_number).toString();
+            if (typeof r.data.result !== 'undefined' && typeof r.data.result.value !== 'undefined') {
+                txContext.sequence = Number(r.data.result.value.sequence).toString();
+                txContext.accountNumber = Number(r.data.result.value.account_number).toString();
 
-                if (r.data.value.coins !== null) {
-                    const tmp = r.data.value.coins.filter(x => x.denom === txsterra.DEFAULT_DENOM);
+                if (r.data.result.value.coins !== null) {
+                    const tmp = r.data.result.value.coins.filter(x => x.denom === txsterra.DEFAULT_DENOM);
                     if (tmp.length > 0) {
                         txContext.balance = Big(tmp[0].amount).toString();
                     }
@@ -262,9 +261,9 @@ TerraDelegateTool.prototype.getAccountDelegations = async function (validators, 
         let totalDelegation = Big(0);
 
         try {
-            if (typeof r.data !== 'undefined' && r.data !== null) {
-                for (let i = 0; i < r.data.length; i += 1) {
-                    const t = r.data[i];
+            if (typeof r.data.result !== 'undefined' && r.data.result !== null) {
+                for (let i = 0; i < r.data.result.length; i += 1) {
+                    const t = r.data.result[i];
                     const valAddr = t.validator_address;
 
                     if (valAddr in validators) {
@@ -296,29 +295,29 @@ TerraDelegateTool.prototype.getAccountDelegations = async function (validators, 
 
 // Retrieve atom balances from the network for a list of account
 // Retrieve delegated/not-delegated balances for each account
-TerraDelegateTool.prototype.retrieveBalances = async function (addressList) {
-    const validators = await this.retrieveValidators();
-
-    // Get all balances
-    const requestsBalance = addressList.map(async (addr, index) => {
-        const txContext = await this.getAccountInfo(addr);
-        return Object.assign({}, addressList[index], txContext);
-    });
-
-    // eslint-disable-next-line max-len,no-unused-vars
-    const requestsDelegations = addressList.map((addr, index) => this.getAccountDelegations(validators, addr));
-
-    // eslint-disable-next-line no-unused-vars,max-len
-    const balances = await Promise.all(requestsBalance);
-    const delegations = await Promise.all(requestsDelegations);
-
-    const reply = [];
-    for (let i = 0; i < addressList.length; i += 1) {
-        reply.push(Object.assign({}, delegations[i], balances[i]));
-    }
-
-    return reply;
-};
+// TerraDelegateTool.prototype.retrieveBalances = async function (addressList) {
+//     const validators = await this.retrieveValidators();
+//
+//     // Get all balances
+//     const requestsBalance = addressList.map(async (addr, index) => {
+//         const txContext = await this.getAccountInfo(addr);
+//         return Object.assign({}, addressList[index], txContext);
+//     });
+//
+//     // eslint-disable-next-line max-len,no-unused-vars
+//     const requestsDelegations = addressList.map((addr, index) => this.getAccountDelegations(validators, addr));
+//
+//     // eslint-disable-next-line no-unused-vars,max-len
+//     const balances = await Promise.all(requestsBalance);
+//     const delegations = await Promise.all(requestsDelegations);
+//
+//     const reply = [];
+//     for (let i = 0; i < addressList.length; i += 1) {
+//         reply.push(Object.assign({}, delegations[i], balances[i]));
+//     }
+//
+//     return reply;
+// };
 
 // Retrieve atom rewards from the network for an account and validator
 TerraDelegateTool.prototype.getRewards = async function (validator, addr) {
@@ -327,9 +326,9 @@ TerraDelegateTool.prototype.getRewards = async function (validator, addr) {
         let reward = Big(0);
 
         try {
-            for (let i = 0; i < r.data.length; i++) {
-                if (typeof r.data[i].amount !== 'undefined' && r.data[i] !== null && r.data[i].denom == "uluna") {
-                    reward = r.data[i].amount;
+            for (let i = 0; i < r.data.result.length; i++) {
+                if (typeof r.data.result[i].amount !== 'undefined' && r.data.result[i] !== null && r.data.result[i].denom == "uluna") {
+                    reward = r.data.result[i].amount;
                 }
             }
         } catch (e) {

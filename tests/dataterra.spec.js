@@ -25,7 +25,7 @@ import MockAdapter from 'axios-mock-adapter';
 
 test('get account info - default values', async () => {
     const mock = new MockAdapter(axios);
-    mock.onGet('mockNode/auth/accounts/cosmos1k7ezdfu3j69npzhccs6m4hu99pydagsva0h0gp').reply(
+    mock.onGet('mockNode/auth/accounts/terra1kgddca7qj96z0qcxr2c45z73cfl0c75pael9y2').reply(
         200,
         {},
     );
@@ -33,7 +33,7 @@ test('get account info - default values', async () => {
     const cdt = new TerraDelegateTool();
     cdt.setNodeURL('mockNode');
 
-    const addr = { bech32: 'cosmos1k7ezdfu3j69npzhccs6m4hu99pydagsva0h0gp' };
+    const addr = { bech32: 'terra1kgddca7qj96z0qcxr2c45z73cfl0c75pael9y2' };
     const answer = await cdt.getAccountInfo(addr);
 
     expect(answer).toHaveProperty('sequence', '0');
@@ -43,118 +43,92 @@ test('get account info - default values', async () => {
 
 test('get account info - parsing', async () => {
     const mock = new MockAdapter(axios);
-    mock.onGet('mockNode/auth/accounts/someaddress').reply(
-        200, {
-            value: {
-                sequence: 10,
-                account_number: 20,
-                coins: [{ amount: 15, denom: 'uluna' }, { amount: 20, denom: 'other' }],
-            },
-        },
+    mock.onGet('mockNode/auth/accounts/terra1kgddca7qj96z0qcxr2c45z73cfl0c75pael9y2').reply(
+        200,
+        {"height":"36034","result":{"type":"core/Account","value":{"address":"terra1kgddca7qj96z0qcxr2c45z73cfl0c75pael9y2","coins":[{"denom":"ukrw","amount":"138115381794"},{"denom":"uluna","amount":"144353828"},{"denom":"umnt","amount":"29685334"},{"denom":"usdr","amount":"112052"},{"denom":"uusd","amount":"18696"}],"public_key":null,"account_number":"542770","sequence":"116"}}},
     );
 
     const cdt = new TerraDelegateTool();
     cdt.setNodeURL('mockNode');
 
-    const addr = { bech32: 'someaddress' };
+    const addr = { bech32: 'terra1kgddca7qj96z0qcxr2c45z73cfl0c75pael9y2' };
     const answer = await cdt.getAccountInfo(addr);
     // console.log(answer)
-    expect(answer).toHaveProperty('sequence', '10');
-    expect(answer).toHaveProperty('accountNumber', '20');
-    expect(answer).toHaveProperty('balance', '15');
+    expect(answer).toHaveProperty('sequence', '116');
+    expect(answer).toHaveProperty('accountNumber', '542770');
+    expect(answer).toHaveProperty('balance', '144353828');
 });
 
-test('get multiple accounts', async () => {
-    const cdt = new TerraDelegateTool();
-    cdt.setNodeURL('mockNodeURL');
-
-    const mock = new MockAdapter(axios);
-    mock.onGet('mockNodeURL/staking/validators').reply(
-        200, [
-            {
-                operator_address: 'some_validator_bech32',
-                tokens: '123456789',
-                delegator_shares: '123456789',
-            },
-            {
-                operator_address: 'some_other_validator_bech32',
-                tokens: '2222',
-                delegator_shares: '4444',
-            },
-        ],
-    );
-    mock.onGet('mockNodeURL/auth/accounts/cosmos1k7ezdfu3j69npzhccs6m4hu99pydagsva0h0gp').reply(
-        200, {
-            value: {
-                sequence: 12,
-                account_number: 34,
-                coins: [{ amount: 56, denom: 'uluna' }, { amount: 20, denom: 'other' }],
-            },
-        },
-    );
-    mock.onGet('mockNodeURL/staking/delegators/cosmos1k7ezdfu3j69npzhccs6m4hu99pydagsva0h0gp/delegations').reply(
-        200, [
-            {
-                delegator_address: 'cosmos1k7ezdfu3j69npzhccs6m4hu99pydagsva0h0gp',
-                validator_address: 'some_validator_bech32',
-                shares: '1000',
-                height: 0,
-            },
-            {
-                delegator_address: 'cosmos1k7ezdfu3j69npzhccs6m4hu99pydagsva0h0gp',
-                validator_address: 'some_other_validator_bech32',
-                shares: '100',
-                height: 0,
-            },
-        ],
-    );
-    mock.onGet('mockNodeURL/auth/accounts/cosmos19krh5y8y5wce3mmj3dxffyc7hgu9tsxndsmmml').reply(
-        200, {
-            value: {
-                sequence: 67,
-                account_number: 89,
-                coins: [{ amount: 1011, denom: 'uluna' }, { amount: 20, denom: 'other' }],
-            },
-        },
-    );
-    mock.onGet('mockNodeURL/staking/delegators/cosmos19krh5y8y5wce3mmj3dxffyc7hgu9tsxndsmmml/delegations').reply(
-        200, {},
-    );
-
-    const addrs = [
-        { bech32: 'cosmos1k7ezdfu3j69npzhccs6m4hu99pydagsva0h0gp' },
-        { bech32: 'cosmos19krh5y8y5wce3mmj3dxffyc7hgu9tsxndsmmml' },
-    ];
-
-    const reply = await cdt.retrieveBalances(addrs);
-    // console.log(JSON.stringify(reply, null, 4));
-
-    expect(reply[0]).toHaveProperty('sequence', '12');
-    expect(reply[0]).toHaveProperty('accountNumber', '34');
-    expect(reply[0]).toHaveProperty('balance', '56');
-    expect(reply[0]).toHaveProperty('delegationsTotal', '1050');
-    expect(reply[0]).toHaveProperty('delegations');
-    expect(Object.keys(reply[0].delegations).length).toEqual(2);
-
-    expect(reply[1]).toHaveProperty('sequence', '67');
-    expect(reply[1]).toHaveProperty('accountNumber', '89');
-    expect(reply[1]).toHaveProperty('balance', '1011');
-    expect(reply[1]).toHaveProperty('delegationsTotal', '0');
-    expect(reply[1]).toHaveProperty('delegations');
-    expect(Object.keys(reply[1].delegations).length).toEqual(0);
-});
+// test('get multiple accounts', async () => {
+//     const cdt = new TerraDelegateTool();
+//     cdt.setNodeURL('mockNodeURL');
+//
+//     const mock = new MockAdapter(axios);
+//     mock.onGet('mockNodeURL/staking/validators').reply(
+//         200, {"height":"22960","result": [
+//             {
+//                 operator_address: 'terravaloper1kgddca7qj96z0qcxr2c45z73cfl0c75paknc5e',
+//                 tokens: '123456789',
+//                 delegator_shares: '123456789',
+//             },
+//             {
+//                 operator_address: 'terravaloper1kgddca7qj96z0qcxr2c45z73cfl0c75paknc5d',
+//                 tokens: '2222',
+//                 delegator_shares: '4444',
+//             },
+//         ]},
+//     );
+//     mock.onGet('mockNode/auth/accounts/terra1kgddca7qj96z0qcxr2c45z73cfl0c75pael9y2').reply(
+//         200,
+//         {"height":"36034","result":{"type":"core/Account","value":{"address":"terra1kgddca7qj96z0qcxr2c45z73cfl0c75pael9y2","coins":[{"denom":"ukrw","amount":"138115381794"},{"denom":"uluna","amount":"144353828"},{"denom":"umnt","amount":"29685334"},{"denom":"usdr","amount":"112052"},{"denom":"uusd","amount":"18696"}],"public_key":null,"account_number":"542770","sequence":"116"}}},
+//     );
+//     mock.onGet('mockNodeURL/staking/delegators/terra1kgddca7qj96z0qcxr2c45z73cfl0c75pael9y2/delegations').reply(
+//         200, {
+//             height: "36109",
+//             result: [
+//                 {
+//                     delegator_address: "terra1kgddca7qj96z0qcxr2c45z73cfl0c75pael9y2",
+//                     validator_address: "terravaloper1kgddca7qj96z0qcxr2c45z73cfl0c75paknc5e",
+//                     shares: "30.000000000000000000",
+//                     balance: "30"
+//                 },
+//                 {
+//                     delegator_address: "terra1kgddca7qj96z0qcxr2c45z73cfl0c75pael9y2",
+//                     validator_address: "terravaloper1kgddca7qj96z0qcxr2c45z73cfl0c75paknc5d",
+//                     shares: "40.000000000000000000",
+//                     balance: "40"
+//                 }
+//             ]
+//         },
+//     );
+//
+//     const addrs = [
+//         { bech32: 'terra1kgddca7qj96z0qcxr2c45z73cfl0c75pael9y2' },
+//         { bech32: 'terra1kgddca7qj96z0qcxr2c45z73cfl0c75pael9y2' },
+//     ];
+//
+//     const reply = await cdt.retrieveBalances(addrs);
+//     // console.log(JSON.stringify(reply, null, 4));
+//     expect(reply[0]).toHaveProperty('sequence', '12');
+//     expect(reply[0]).toHaveProperty('accountNumber', '34');
+//     expect(reply[0]).toHaveProperty('balance', '56');
+//     expect(reply[0]).toHaveProperty('delegationsTotal', '1050');
+//     expect(reply[0]).toHaveProperty('delegations');
+//     expect(Object.keys(reply[0].delegations).length).toEqual(2);
+//
+//     expect(reply[1]).toHaveProperty('sequence', '116');
+//     expect(reply[1]).toHaveProperty('accountNumber', '542770');
+//     expect(reply[1]).toHaveProperty('balance', '1011');
+//     expect(reply[1]).toHaveProperty('delegationsTotal', '0');
+//     expect(reply[1]).toHaveProperty('delegations');
+//     expect(Object.keys(reply[1].delegations).length).toEqual(0);
+// });
 
 test('create delegate tx', async () => {
     const mock = new MockAdapter(axios);
-    mock.onGet('mockNode/auth/accounts/cosmos1k7ezdfu3j69npzhccs6m4hu99pydagsva0h0gp').reply(
+    mock.onGet('mockNode/auth/accounts/terra1kgddca7qj96z0qcxr2c45z73cfl0c75pael9y2').reply(
         200,
-        {
-            value: {
-                sequence: 10,
-                account_number: 20,
-                coins: [{ amount: 15, denom: 'uluna' }, { amount: 20, denom: 'other' }],
-            },
-        },
+        {"height":"36034","result":{"type":"core/Account","value":{"address":"terra1kgddca7qj96z0qcxr2c45z73cfl0c75pael9y2","coins":[{"denom":"ukrw","amount":"138115381794"},{"denom":"uluna","amount":"144353828"},{"denom":"umnt","amount":"29685334"},{"denom":"usdr","amount":"112052"},{"denom":"uusd","amount":"18696"}],"public_key":null,"account_number":"542770","sequence":"116"}}},
     );
 
     const cdt = new TerraDelegateTool();
@@ -162,7 +136,7 @@ test('create delegate tx', async () => {
 
     const txContext = {
         chainId: 'testing',
-        bech32: 'cosmos1k7ezdfu3j69npzhccs6m4hu99pydagsva0h0gp',
+        bech32: 'terra1kgddca7qj96z0qcxr2c45z73cfl0c75pael9y2',
     };
 
     const validatorAddrBech32 = 'cosmosvaloper1zyp0axz2t55lxkmgrvg4vpey2rf4ratcsud07t';
@@ -179,13 +153,13 @@ test('create delegate tx', async () => {
     // console.log(JSON.stringify(unsignedTx, null, 4));
 
     // A call to retrieve account data is made
-    expect(mock.history.get[0].url).toEqual('mockNode/auth/accounts/cosmos1k7ezdfu3j69npzhccs6m4hu99pydagsva0h0gp');
+    expect(mock.history.get[0].url).toEqual('mockNode/auth/accounts/terra1kgddca7qj96z0qcxr2c45z73cfl0c75pael9y2');
 
     // txContext is kept and two new fields appear
     expect(txContext).toHaveProperty('chainId', 'testing');
-    expect(txContext).toHaveProperty('bech32', 'cosmos1k7ezdfu3j69npzhccs6m4hu99pydagsva0h0gp');
-    expect(txContext).toHaveProperty('accountNumber', '20');
-    expect(txContext).toHaveProperty('sequence', '10');
+    expect(txContext).toHaveProperty('bech32', 'terra1kgddca7qj96z0qcxr2c45z73cfl0c75pael9y2');
+    expect(txContext).toHaveProperty('accountNumber', '542770');
+    expect(txContext).toHaveProperty('sequence', '116');
 
     expect(unsignedTx).toHaveProperty('type', 'auth/StdTx');
     expect(unsignedTx).toHaveProperty('value');
@@ -193,13 +167,13 @@ test('create delegate tx', async () => {
     expect(unsignedTx.value.msg).toHaveProperty('length', 1);
     expect(unsignedTx.value.msg[0]).toHaveProperty('type', 'staking/MsgDelegate');
     expect(unsignedTx.value.msg[0].value).toHaveProperty('amount', { amount: '8765', denom: 'uluna' });
-    expect(unsignedTx.value.msg[0].value).toHaveProperty('delegator_address', 'cosmos1k7ezdfu3j69npzhccs6m4hu99pydagsva0h0gp');
+    expect(unsignedTx.value.msg[0].value).toHaveProperty('delegator_address', 'terra1kgddca7qj96z0qcxr2c45z73cfl0c75pael9y2');
     expect(unsignedTx.value.msg[0].value).toHaveProperty('validator_address', 'cosmosvaloper1zyp0axz2t55lxkmgrvg4vpey2rf4ratcsud07t');
 });
 
 test('get bytes to sign', async () => {
     const mock = new MockAdapter(axios);
-    mock.onGet('mockNode/auth/accounts/cosmos1k7ezdfu3j69npzhccs6m4hu99pydagsva0h0gp').reply(
+    mock.onGet('mockNode/auth/accounts/terra1kgddca7qj96z0qcxr2c45z73cfl0c75pael9y2').reply(
         200,
         {},
     );
@@ -209,7 +183,7 @@ test('get bytes to sign', async () => {
 
     const txContext = {
         chainId: 'some_chain',
-        bech32: 'cosmos1k7ezdfu3j69npzhccs6m4hu99pydagsva0h0gp',
+        bech32: 'terra1kgddca7qj96z0qcxr2c45z73cfl0c75pael9y2',
     };
 
     const dummyTx = await cdt.txCreateDelegate(
@@ -229,15 +203,9 @@ test('relay delegation tx', async () => {
     const cdt = new TerraDelegateTool();
     cdt.setNodeURL('mockNode');
     const mock = new MockAdapter(axios);
-    mock.onGet('mockNode/auth/accounts/cosmos1k7ezdfu3j69npzhccs6m4hu99pydagsva0h0gp').reply(
+    mock.onGet('mockNode/auth/accounts/terra1kgddca7qj96z0qcxr2c45z73cfl0c75pael9y2').reply(
         200,
-        {
-            value: {
-                sequence: 10,
-                account_number: 20,
-                coins: [{ amount: 15, denom: 'uluna' }, { amount: 20, denom: 'other' }],
-            },
-        },
+        {"height":"36034","result":{"type":"core/Account","value":{"address":"terra1kgddca7qj96z0qcxr2c45z73cfl0c75pael9y2","coins":[{"denom":"ukrw","amount":"138115381794"},{"denom":"uluna","amount":"144353828"},{"denom":"umnt","amount":"29685334"},{"denom":"usdr","amount":"112052"},{"denom":"uusd","amount":"18696"}],"public_key":null,"account_number":"542770","sequence":"116"}}},
     );
     mock.onPost('mockNode/txs').reply(
         200,
@@ -255,7 +223,7 @@ test('relay delegation tx', async () => {
 
     const txContext = {
         chainId: 'testing',
-        bech32: 'cosmos1k7ezdfu3j69npzhccs6m4hu99pydagsva0h0gp',
+        bech32: 'terra1kgddca7qj96z0qcxr2c45z73cfl0c75pael9y2',
         pk: '028284dfb203d9a702eb6d60ea7bcf37b7099f66d363ac024a9b249859bfb7dc3e',
     };
 
@@ -293,7 +261,7 @@ test('relay delegation tx', async () => {
     // check REST interactions
     expect(mock.history.get.length).toEqual(1);
     expect(mock.history.post.length).toEqual(1);
-    expect(mock.history.get[0].url).toEqual('mockNode/auth/accounts/cosmos1k7ezdfu3j69npzhccs6m4hu99pydagsva0h0gp');
+    expect(mock.history.get[0].url).toEqual('mockNode/auth/accounts/terra1kgddca7qj96z0qcxr2c45z73cfl0c75pael9y2');
 
     // Check what was posted
     expect(mock.history.post[0].url).toEqual('mockNode/txs');
@@ -307,10 +275,10 @@ test('relay delegation tx', async () => {
     expect(postData.tx).toHaveProperty('fee', { amount: [{"amount": "5000","denom": "uluna",},], gas: '200000' });
     expect(postData.tx).toHaveProperty('memo', 'some memo message');
     expect(postData.tx).toHaveProperty('signatures');
-    expect(postData.tx.signatures[0]).toHaveProperty('account_number', '20');
-    expect(postData.tx.signatures[0]).toHaveProperty('sequence', '10');
+    expect(postData.tx.signatures[0]).toHaveProperty('account_number', '542770');
+    expect(postData.tx.signatures[0]).toHaveProperty('sequence', '116');
     expect(postData.tx.signatures[0]).toHaveProperty('signature',
-        'PYdxlLh6nhOJ5eIEotIY1cZRrkNKe04Y82WlnKXvKv4Zdk4e8+wSzgtIrbhTGlCmMab+M/S5dOhhVyGcn9/EOw==');
+        'P+W+juLVFFDHLqi3a02eIecS46wEl4fvaTV0MbAWTjpTtJWy3/8aRMfTjZvkcD321M6FmwkN4hPclQGBu9XgMw==');
     expect(postData.tx.signatures[0]).toHaveProperty('pub_key', {
         type: 'tendermint/PubKeySecp256k1',
         value: 'AoKE37ID2acC621g6nvPN7cJn2bTY6wCSpskmFm/t9w+',
@@ -322,15 +290,9 @@ test('relay redelegation tx', async () => {
     cdt.setNodeURL('mockNode');
 
     const mock = new MockAdapter(axios);
-    mock.onGet('mockNode/auth/accounts/cosmos1k7ezdfu3j69npzhccs6m4hu99pydagsva0h0gp').reply(
+    mock.onGet('mockNode/auth/accounts/terra1kgddca7qj96z0qcxr2c45z73cfl0c75pael9y2').reply(
         200,
-        {
-            value: {
-                sequence: 10,
-                account_number: 20,
-                coins: [{ amount: 15, denom: 'uluna' }, { amount: 20, denom: 'other' }],
-            },
-        },
+        {"height":"36034","result":{"type":"core/Account","value":{"address":"terra1kgddca7qj96z0qcxr2c45z73cfl0c75pael9y2","coins":[{"denom":"ukrw","amount":"138115381794"},{"denom":"uluna","amount":"144353828"},{"denom":"umnt","amount":"29685334"},{"denom":"usdr","amount":"112052"},{"denom":"uusd","amount":"18696"}],"public_key":null,"account_number":"542770","sequence":"116"}}},
     );
     mock.onPost('mockNode/txs').reply(
         200,
@@ -349,7 +311,7 @@ test('relay redelegation tx', async () => {
 
     const txContext = {
         chainId: 'testing',
-        bech32: 'cosmos1k7ezdfu3j69npzhccs6m4hu99pydagsva0h0gp',
+        bech32: 'terra1kgddca7qj96z0qcxr2c45z73cfl0c75pael9y2',
         pk: '028284dfb203d9a702eb6d60ea7bcf37b7099f66d363ac024a9b249859bfb7dc3e',
     };
 
@@ -393,7 +355,7 @@ test('relay redelegation tx', async () => {
     // check REST interactions
     expect(mock.history.get.length).toEqual(1);
     expect(mock.history.post.length).toEqual(1);
-    expect(mock.history.get[0].url).toEqual('mockNode/auth/accounts/cosmos1k7ezdfu3j69npzhccs6m4hu99pydagsva0h0gp');
+    expect(mock.history.get[0].url).toEqual('mockNode/auth/accounts/terra1kgddca7qj96z0qcxr2c45z73cfl0c75pael9y2');
 
     // Check what was posted
     expect(mock.history.post[0].url).toEqual('mockNode/txs');
@@ -407,10 +369,10 @@ test('relay redelegation tx', async () => {
     expect(postData.tx).toHaveProperty('fee', { amount: [{"amount": "5000","denom": "uluna",},], gas: '200000' });
     expect(postData.tx).toHaveProperty('memo', 'some memo message - redelegate');
     expect(postData.tx).toHaveProperty('signatures');
-    expect(postData.tx.signatures[0]).toHaveProperty('account_number', '20');
-    expect(postData.tx.signatures[0]).toHaveProperty('sequence', '10');
+    expect(postData.tx.signatures[0]).toHaveProperty('account_number', '542770');
+    expect(postData.tx.signatures[0]).toHaveProperty('sequence', '116');
     expect(postData.tx.signatures[0]).toHaveProperty('signature',
-        'RGL8iQuKmpbEwRXF6TDYvvEV2NVeg2pGAHIyc5UN0m5Tb415PzqAg5edU3K8N45ZnVKyKjsRaSUlzg0hYHaKRA==');
+        'UvIPNBLm3JaGctGzEH3YKu199Rf+Z7UnAMFUfOo/VWgNDtTXIc8zZ1eLa62YOMJffwiOikYIme1Nfpk6cO0dcQ==');
     expect(postData.tx.signatures[0]).toHaveProperty('pub_key', {
         type: 'tendermint/PubKeySecp256k1',
         value: 'AoKE37ID2acC621g6nvPN7cJn2bTY6wCSpskmFm/t9w+',
@@ -421,15 +383,9 @@ test('relay undelegation tx', async () => {
     const cdt = new TerraDelegateTool();
     cdt.setNodeURL('mockNode');
     const mock = new MockAdapter(axios);
-    mock.onGet('mockNode/auth/accounts/cosmos1k7ezdfu3j69npzhccs6m4hu99pydagsva0h0gp').reply(
+    mock.onGet('mockNode/auth/accounts/terra1kgddca7qj96z0qcxr2c45z73cfl0c75pael9y2').reply(
         200,
-        {
-            value: {
-                sequence: 10,
-                account_number: 20,
-                coins: [{ amount: 15, denom: 'uluna' }, { amount: 20, denom: 'other' }],
-            },
-        },
+        {"height":"36034","result":{"type":"core/Account","value":{"address":"terra1kgddca7qj96z0qcxr2c45z73cfl0c75pael9y2","coins":[{"denom":"ukrw","amount":"138115381794"},{"denom":"uluna","amount":"144353828"},{"denom":"umnt","amount":"29685334"},{"denom":"usdr","amount":"112052"},{"denom":"uusd","amount":"18696"}],"public_key":null,"account_number":"542770","sequence":"116"}}},
     );
     mock.onPost('mockNode/txs').reply(
         200,
@@ -447,7 +403,7 @@ test('relay undelegation tx', async () => {
 
     const txContext = {
         chainId: 'testing',
-        bech32: 'cosmos1k7ezdfu3j69npzhccs6m4hu99pydagsva0h0gp',
+        bech32: 'terra1kgddca7qj96z0qcxr2c45z73cfl0c75pael9y2',
         pk: '028284dfb203d9a702eb6d60ea7bcf37b7099f66d363ac024a9b249859bfb7dc3e',
     };
 
@@ -488,7 +444,7 @@ test('relay undelegation tx', async () => {
     // check REST interactions
     expect(mock.history.get.length).toEqual(1);
     expect(mock.history.post.length).toEqual(1);
-    expect(mock.history.get[0].url).toEqual('mockNode/auth/accounts/cosmos1k7ezdfu3j69npzhccs6m4hu99pydagsva0h0gp');
+    expect(mock.history.get[0].url).toEqual('mockNode/auth/accounts/terra1kgddca7qj96z0qcxr2c45z73cfl0c75pael9y2');
 
     // Check what was posted
     expect(mock.history.post[0].url).toEqual('mockNode/txs');
@@ -502,10 +458,10 @@ test('relay undelegation tx', async () => {
     expect(postData.tx).toHaveProperty('fee', { amount: [{"amount": "5000","denom": "uluna",},], gas: '200000' });
     expect(postData.tx).toHaveProperty('memo', 'some memo message - undelegate');
     expect(postData.tx).toHaveProperty('signatures');
-    expect(postData.tx.signatures[0]).toHaveProperty('account_number', '20');
-    expect(postData.tx.signatures[0]).toHaveProperty('sequence', '10');
+    expect(postData.tx.signatures[0]).toHaveProperty('account_number', '542770');
+    expect(postData.tx.signatures[0]).toHaveProperty('sequence', '116');
     expect(postData.tx.signatures[0]).toHaveProperty('signature',
-        'yg26mAzJN1jZL7v2cRgdCqKKgQVvhq9ZnlafosWFhqMiMOpQH2TP6JfpAcPZUo1km92S4/b3jp9GRfLFP9/e/A==');
+        '3c+EplNp31UlUb5UHVlGF0LDStCcEhXJJQy5jphWbjU5K0OxZ7/Gx5UaxAVQc9yIdqESFNlm9spiIZGFPlTBQw==');
     expect(postData.tx.signatures[0]).toHaveProperty('pub_key', {
         type: 'tendermint/PubKeySecp256k1',
         value: 'AoKE37ID2acC621g6nvPN7cJn2bTY6wCSpskmFm/t9w+',
@@ -575,20 +531,32 @@ test('get reward', async () => {
     const mock = new MockAdapter(axios);
     mock.onGet('mockNode/distribution/delegators/terra1zwp97t7kx6sgk5yz6ad9ajqyndd8lv0mg7upyh/rewards/terravaloper1kgddca7qj96z0qcxr2c45z73cfl0c75paknc5e').reply(
         200,
-        [
-            {
-                "denom": "ukrw",
-                "amount": "20.330739650322860000"
-            },
-            {
-                "denom": "uluna",
-                "amount": "0.000004433832260000"
-            }
-        ],
+        {"height":"0","result":[
+                {
+                    "denom": "ukrw",
+                    "amount": "3700237612.530939417885000000"
+                },
+                {
+                    "denom": "uluna",
+                    "amount": "680.500568571405000000"
+                },
+                {
+                    "denom": "umnt",
+                    "amount": "279982.127375940540000000"
+                },
+                {
+                    "denom": "usdr",
+                    "amount": "892.011070447695000000"
+                },
+                {
+                    "denom": "uusd",
+                    "amount": "0.224932290630000000"
+                }
+            ]},
     );
 
     const cdt = new TerraDelegateTool();
     cdt.setNodeURL('mockNode');
     const status = await cdt.getRewards('terravaloper1kgddca7qj96z0qcxr2c45z73cfl0c75paknc5e', { bech32: 'terra1zwp97t7kx6sgk5yz6ad9ajqyndd8lv0mg7upyh' });
-    expect(status).toBe("0.000004433832260000");
+    expect(status).toBe("680.500568571405000000");
 });
