@@ -503,42 +503,84 @@ KavaDelegateTool.prototype.getAccountDelegations = function _callee8(validators,
   }, null, this);
 }; // Retrieve atom balances from the network for a list of account
 // Retrieve delegated/not-delegated balances for each account
-// KavaDelegateTool.prototype.retrieveBalances = async function (addressList) {
-//     const validators = await this.retrieveValidators();
-//
-//     // Get all balances
-//     const requestsBalance = addressList.map(async (addr, index) => {
-//         const txContext = await this.getAccountInfo(addr);
-//         return Object.assign({}, addressList[index], txContext);
-//     });
-//
-//     // eslint-disable-next-line max-len,no-unused-vars
-//     const requestsDelegations = addressList.map((addr, index) => this.getAccountDelegations(validators, addr));
-//
-//     // eslint-disable-next-line no-unused-vars,max-len
-//     const balances = await Promise.all(requestsBalance);
-//     const delegations = await Promise.all(requestsDelegations);
-//
-//     const reply = [];
-//     for (let i = 0; i < addressList.length; i += 1) {
-//         reply.push(Object.assign({}, delegations[i], balances[i]));
-//     }
-//
-//     return reply;
-// };
-// Retrieve atom rewards from the network for an account and validator
 
 
-KavaDelegateTool.prototype.getRewards = function _callee9(addr) {
+KavaDelegateTool.prototype.retrieveBalances = function _callee10(addressList) {
   var _this5 = this;
 
-  var url;
-  return _regenerator["default"].async(function _callee9$(_context9) {
+  var validators, requestsBalance, requestsDelegations, balances, delegations, reply, i;
+  return _regenerator["default"].async(function _callee10$(_context10) {
     while (1) {
-      switch (_context9.prev = _context9.next) {
+      switch (_context10.prev = _context10.next) {
+        case 0:
+          _context10.next = 2;
+          return _regenerator["default"].awrap(this.retrieveValidators());
+
+        case 2:
+          validators = _context10.sent;
+          // Get all balances
+          requestsBalance = addressList.map(function _callee9(addr, index) {
+            var txContext;
+            return _regenerator["default"].async(function _callee9$(_context9) {
+              while (1) {
+                switch (_context9.prev = _context9.next) {
+                  case 0:
+                    _context9.next = 2;
+                    return _regenerator["default"].awrap(_this5.getAccountInfo(addr));
+
+                  case 2:
+                    txContext = _context9.sent;
+                    return _context9.abrupt("return", Object.assign({}, addressList[index], txContext));
+
+                  case 4:
+                  case "end":
+                    return _context9.stop();
+                }
+              }
+            });
+          }); // eslint-disable-next-line max-len,no-unused-vars
+
+          requestsDelegations = addressList.map(function (addr, index) {
+            return _this5.getAccountDelegations(validators, addr);
+          }); // eslint-disable-next-line no-unused-vars,max-len
+
+          _context10.next = 7;
+          return _regenerator["default"].awrap(Promise.all(requestsBalance));
+
+        case 7:
+          balances = _context10.sent;
+          _context10.next = 10;
+          return _regenerator["default"].awrap(Promise.all(requestsDelegations));
+
+        case 10:
+          delegations = _context10.sent;
+          reply = [];
+
+          for (i = 0; i < addressList.length; i += 1) {
+            reply.push(Object.assign({}, delegations[i], balances[i]));
+          }
+
+          return _context10.abrupt("return", reply);
+
+        case 14:
+        case "end":
+          return _context10.stop();
+      }
+    }
+  }, null, this);
+}; // Retrieve atom rewards from the network for an account and validator
+
+
+KavaDelegateTool.prototype.getRewards = function _callee11(addr) {
+  var _this6 = this;
+
+  var url;
+  return _regenerator["default"].async(function _callee11$(_context11) {
+    while (1) {
+      switch (_context11.prev = _context11.next) {
         case 0:
           url = "".concat(nodeURL(this), "/distribution/delegators/").concat(addr.bech32, "/rewards");
-          return _context9.abrupt("return", _axios["default"].get(url).then(function (r) {
+          return _context11.abrupt("return", _axios["default"].get(url).then(function (r) {
             var reward = (0, _big["default"])(0);
 
             try {
@@ -551,12 +593,12 @@ KavaDelegateTool.prototype.getRewards = function _callee9(addr) {
 
             return reward;
           }, function (e) {
-            return wrapError(_this5, e);
+            return wrapError(_this6, e);
           }));
 
         case 2:
         case "end":
-          return _context9.stop();
+          return _context11.stop();
       }
     }
   }, null, this);
@@ -564,94 +606,7 @@ KavaDelegateTool.prototype.getRewards = function _callee9(addr) {
 // this function expect that retrieve balances has been called before
 
 
-KavaDelegateTool.prototype.txCreateDelegate = function _callee10(txContext, validatorBech32, uatomAmount, memo) {
-  var accountInfo;
-  return _regenerator["default"].async(function _callee10$(_context10) {
-    while (1) {
-      switch (_context10.prev = _context10.next) {
-        case 0:
-          if (!(typeof txContext === 'undefined')) {
-            _context10.next = 2;
-            break;
-          }
-
-          throw new Error('undefined txContext');
-
-        case 2:
-          if (!(typeof txContext.bech32 === 'undefined')) {
-            _context10.next = 4;
-            break;
-          }
-
-          throw new Error('txContext does not contain the source address (bech32)');
-
-        case 4:
-          _context10.next = 6;
-          return _regenerator["default"].awrap(this.getAccountInfo(txContext));
-
-        case 6:
-          accountInfo = _context10.sent;
-          // eslint-disable-next-line no-param-reassign
-          txContext.accountNumber = accountInfo.accountNumber; // eslint-disable-next-line no-param-reassign
-
-          txContext.sequence = accountInfo.sequence;
-          return _context10.abrupt("return", _kava["default"].createDelegate(txContext, validatorBech32, (0, _big["default"])(uatomAmount), memo));
-
-        case 10:
-        case "end":
-          return _context10.stop();
-      }
-    }
-  }, null, this);
-}; // Creates a new staking tx based on the input parameters
-// this function expect that retrieve balances has been called before
-
-
-KavaDelegateTool.prototype.txCreateRedelegate = function _callee11(txContext, validatorSourceBech32, validatorDestBech32, uatomAmount, memo) {
-  var accountInfo;
-  return _regenerator["default"].async(function _callee11$(_context11) {
-    while (1) {
-      switch (_context11.prev = _context11.next) {
-        case 0:
-          if (!(typeof txContext === 'undefined')) {
-            _context11.next = 2;
-            break;
-          }
-
-          throw new Error('undefined txContext');
-
-        case 2:
-          if (!(typeof txContext.bech32 === 'undefined')) {
-            _context11.next = 4;
-            break;
-          }
-
-          throw new Error('txContext does not contain the source address (bech32)');
-
-        case 4:
-          _context11.next = 6;
-          return _regenerator["default"].awrap(this.getAccountInfo(txContext));
-
-        case 6:
-          accountInfo = _context11.sent;
-          // eslint-disable-next-line no-param-reassign
-          txContext.accountNumber = accountInfo.accountNumber; // eslint-disable-next-line no-param-reassign
-
-          txContext.sequence = accountInfo.sequence; // Convert from uatoms to shares
-
-          return _context11.abrupt("return", _kava["default"].createRedelegate(txContext, validatorSourceBech32, validatorDestBech32, uatomAmount, memo));
-
-        case 10:
-        case "end":
-          return _context11.stop();
-      }
-    }
-  }, null, this);
-}; // Creates a new undelegation tx based on the input parameters
-// this function expect that retrieve balances has been called before
-
-
-KavaDelegateTool.prototype.txCreateUndelegate = function _callee12(txContext, validatorBech32, uatomAmount, memo) {
+KavaDelegateTool.prototype.txCreateDelegate = function _callee12(txContext, validatorBech32, uatomAmount, memo) {
   var accountInfo;
   return _regenerator["default"].async(function _callee12$(_context12) {
     while (1) {
@@ -682,7 +637,7 @@ KavaDelegateTool.prototype.txCreateUndelegate = function _callee12(txContext, va
           txContext.accountNumber = accountInfo.accountNumber; // eslint-disable-next-line no-param-reassign
 
           txContext.sequence = accountInfo.sequence;
-          return _context12.abrupt("return", _kava["default"].createUndelegate(txContext, validatorBech32, uatomAmount, memo));
+          return _context12.abrupt("return", _kava["default"].createDelegate(txContext, validatorBech32, (0, _big["default"])(uatomAmount), memo));
 
         case 10:
         case "end":
@@ -690,10 +645,11 @@ KavaDelegateTool.prototype.txCreateUndelegate = function _callee12(txContext, va
       }
     }
   }, null, this);
-}; // Creates a new withdrawl tx based on the input parameters
+}; // Creates a new staking tx based on the input parameters
+// this function expect that retrieve balances has been called before
 
 
-KavaDelegateTool.prototype.txCreateWithdrawl = function _callee13(txContext, validatorBech32, memo) {
+KavaDelegateTool.prototype.txCreateRedelegate = function _callee13(txContext, validatorSourceBech32, validatorDestBech32, uatomAmount, memo) {
   var accountInfo;
   return _regenerator["default"].async(function _callee13$(_context13) {
     while (1) {
@@ -723,8 +679,9 @@ KavaDelegateTool.prototype.txCreateWithdrawl = function _callee13(txContext, val
           // eslint-disable-next-line no-param-reassign
           txContext.accountNumber = accountInfo.accountNumber; // eslint-disable-next-line no-param-reassign
 
-          txContext.sequence = accountInfo.sequence;
-          return _context13.abrupt("return", _kava["default"].createWithdrawl(txContext, validatorBech32, memo));
+          txContext.sequence = accountInfo.sequence; // Convert from uatoms to shares
+
+          return _context13.abrupt("return", _kava["default"].createRedelegate(txContext, validatorSourceBech32, validatorDestBech32, uatomAmount, memo));
 
         case 10:
         case "end":
@@ -732,55 +689,140 @@ KavaDelegateTool.prototype.txCreateWithdrawl = function _callee13(txContext, val
       }
     }
   }, null, this);
-}; // Relays a signed transaction and returns a transaction hash
+}; // Creates a new undelegation tx based on the input parameters
+// this function expect that retrieve balances has been called before
 
 
-KavaDelegateTool.prototype.txSubmit = function _callee14(signedTx) {
-  var _this6 = this;
-
-  var txBody, url;
+KavaDelegateTool.prototype.txCreateUndelegate = function _callee14(txContext, validatorBech32, uatomAmount, memo) {
+  var accountInfo;
   return _regenerator["default"].async(function _callee14$(_context14) {
     while (1) {
       switch (_context14.prev = _context14.next) {
+        case 0:
+          if (!(typeof txContext === 'undefined')) {
+            _context14.next = 2;
+            break;
+          }
+
+          throw new Error('undefined txContext');
+
+        case 2:
+          if (!(typeof txContext.bech32 === 'undefined')) {
+            _context14.next = 4;
+            break;
+          }
+
+          throw new Error('txContext does not contain the source address (bech32)');
+
+        case 4:
+          _context14.next = 6;
+          return _regenerator["default"].awrap(this.getAccountInfo(txContext));
+
+        case 6:
+          accountInfo = _context14.sent;
+          // eslint-disable-next-line no-param-reassign
+          txContext.accountNumber = accountInfo.accountNumber; // eslint-disable-next-line no-param-reassign
+
+          txContext.sequence = accountInfo.sequence;
+          return _context14.abrupt("return", _kava["default"].createUndelegate(txContext, validatorBech32, uatomAmount, memo));
+
+        case 10:
+        case "end":
+          return _context14.stop();
+      }
+    }
+  }, null, this);
+}; // Creates a new withdrawl tx based on the input parameters
+
+
+KavaDelegateTool.prototype.txCreateWithdrawl = function _callee15(txContext, validatorBech32, memo) {
+  var accountInfo;
+  return _regenerator["default"].async(function _callee15$(_context15) {
+    while (1) {
+      switch (_context15.prev = _context15.next) {
+        case 0:
+          if (!(typeof txContext === 'undefined')) {
+            _context15.next = 2;
+            break;
+          }
+
+          throw new Error('undefined txContext');
+
+        case 2:
+          if (!(typeof txContext.bech32 === 'undefined')) {
+            _context15.next = 4;
+            break;
+          }
+
+          throw new Error('txContext does not contain the source address (bech32)');
+
+        case 4:
+          _context15.next = 6;
+          return _regenerator["default"].awrap(this.getAccountInfo(txContext));
+
+        case 6:
+          accountInfo = _context15.sent;
+          // eslint-disable-next-line no-param-reassign
+          txContext.accountNumber = accountInfo.accountNumber; // eslint-disable-next-line no-param-reassign
+
+          txContext.sequence = accountInfo.sequence;
+          return _context15.abrupt("return", _kava["default"].createWithdrawl(txContext, validatorBech32, memo));
+
+        case 10:
+        case "end":
+          return _context15.stop();
+      }
+    }
+  }, null, this);
+}; // Relays a signed transaction and returns a transaction hash
+
+
+KavaDelegateTool.prototype.txSubmit = function _callee16(signedTx) {
+  var _this7 = this;
+
+  var txBody, url;
+  return _regenerator["default"].async(function _callee16$(_context16) {
+    while (1) {
+      switch (_context16.prev = _context16.next) {
         case 0:
           txBody = {
             tx: signedTx.value,
             mode: 'async'
           };
           url = "".concat(nodeURL(this), "/txs");
-          return _context14.abrupt("return", _axios["default"].post(url, JSON.stringify(txBody)).then(function (r) {
+          return _context16.abrupt("return", _axios["default"].post(url, JSON.stringify(txBody)).then(function (r) {
             return r;
           }, function (e) {
-            return wrapError(_this6, e);
+            return wrapError(_this7, e);
           }));
 
         case 3:
         case "end":
-          return _context14.stop();
+          return _context16.stop();
       }
     }
   }, null, this);
 }; // Retrieve the status of a transaction hash
 
 
-KavaDelegateTool.prototype.txStatus = function _callee15(txHash) {
-  var _this7 = this;
+KavaDelegateTool.prototype.txStatus = function _callee17(txHash) {
+  var _this8 = this;
 
   var url;
-  return _regenerator["default"].async(function _callee15$(_context15) {
+  return _regenerator["default"].async(function _callee17$(_context17) {
     while (1) {
-      switch (_context15.prev = _context15.next) {
+      switch (_context17.prev = _context17.next) {
         case 0:
           url = "".concat(nodeURL(this), "/txs/").concat(txHash);
-          return _context15.abrupt("return", _axios["default"].get(url).then(function (r) {
+          return _context17.abrupt("return", _axios["default"].get(url).then(function (r) {
             return r.data;
           }, function (e) {
-            return wrapError(_this7, e);
+            return wrapError(_this8, e);
           }));
 
         case 2:
         case "end":
-          return _context15.stop();
+          return _context17.stop();
       }
     }
   }, null, this);

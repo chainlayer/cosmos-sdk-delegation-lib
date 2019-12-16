@@ -1,6 +1,6 @@
 {
   "name": "cosmos-sdk-delegation-lib",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Node API for Cosmos-SDK Delegation using Ledger Nano S/X",
   "main": "./dist/index.js",
   "repository": {

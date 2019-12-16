@@ -295,29 +295,29 @@ TerraDelegateTool.prototype.getAccountDelegations = async function (validators, 
 
 // Retrieve atom balances from the network for a list of account
 // Retrieve delegated/not-delegated balances for each account
-// TerraDelegateTool.prototype.retrieveBalances = async function (addressList) {
-//     const validators = await this.retrieveValidators();
-//
-//     // Get all balances
-//     const requestsBalance = addressList.map(async (addr, index) => {
-//         const txContext = await this.getAccountInfo(addr);
-//         return Object.assign({}, addressList[index], txContext);
-//     });
-//
-//     // eslint-disable-next-line max-len,no-unused-vars
-//     const requestsDelegations = addressList.map((addr, index) => this.getAccountDelegations(validators, addr));
-//
-//     // eslint-disable-next-line no-unused-vars,max-len
-//     const balances = await Promise.all(requestsBalance);
-//     const delegations = await Promise.all(requestsDelegations);
-//
-//     const reply = [];
-//     for (let i = 0; i < addressList.length; i += 1) {
-//         reply.push(Object.assign({}, delegations[i], balances[i]));
-//     }
-//
-//     return reply;
-// };
+TerraDelegateTool.prototype.retrieveBalances = async function (addressList) {
+    const validators = await this.retrieveValidators();
+
+    // Get all balances
+    const requestsBalance = addressList.map(async (addr, index) => {
+        const txContext = await this.getAccountInfo(addr);
+        return Object.assign({}, addressList[index], txContext);
+    });
+
+    // eslint-disable-next-line max-len,no-unused-vars
+    const requestsDelegations = addressList.map((addr, index) => this.getAccountDelegations(validators, addr));
+
+    // eslint-disable-next-line no-unused-vars,max-len
+    const balances = await Promise.all(requestsBalance);
+    const delegations = await Promise.all(requestsDelegations);
+
+    const reply = [];
+    for (let i = 0; i < addressList.length; i += 1) {
+        reply.push(Object.assign({}, delegations[i], balances[i]));
+    }
+
+    return reply;
+};
 
 // Retrieve atom rewards from the network for an account and validator
 TerraDelegateTool.prototype.getRewards = async function (validator, addr) {
