@@ -26,7 +26,7 @@ var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof"));
  *  limitations under the License.
  ******************************************************************************* */
 var DEFAULT_DENOM = 'ukava';
-var DEFAULT_GAS = 200000;
+var DEFAULT_GAS = 280000;
 var DEFAULT_GAS_PRICE = 0.025;
 var DEFAULT_MEMO = '';
 

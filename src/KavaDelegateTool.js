@@ -199,9 +199,10 @@ KavaDelegateTool.prototype.scanAddresses = async function (minAccount, maxAccoun
 };
 
 KavaDelegateTool.prototype.getPrice = async function () {
-    const url = `https://min-api.cryptocompare.com/data/price?fsym=KAVA&tsyms=USD`;
+    // const url = `https://min-api.cryptocompare.com/data/price?fsym=KAVA&tsyms=USD`;
+    const url = `https://api.coingecko.com/api/v3/simple/price?ids=kava&vs_currencies=USD`;
     return axios.get(url).then((r) => {
-        return r.data.USD;
+        return r.data.kava.usd;
     }, e => wrapError(this, e));
 };
 
@@ -209,9 +210,9 @@ KavaDelegateTool.prototype.retrieveValidators = async function () {
     const url = `${nodeURL(this)}/staking/validators`;
     return axios.get(url).then((r) => {
         const validators = {};
-        for (let i = 0; i < r.data.length; i += 1) {
+        for (let i = 0; i < r.data.result.length; i += 1) {
             const validatorData = {};
-            const t = r.data[i];
+            const t = r.data.result[i];
             validatorData.tokens = Big(t.tokens);
             validatorData.totalShares = Big(t.delegator_shares);
             validators[t.operator_address] = validatorData;
@@ -231,14 +232,27 @@ KavaDelegateTool.prototype.getAccountInfo = async function (addr) {
 
     return axios.get(url).then((r) => {
         try {
-            if (typeof r.data !== 'undefined' && typeof r.data.value !== 'undefined') {
-                txContext.sequence = Number(r.data.value.sequence).toString();
-                txContext.accountNumber = Number(r.data.value.account_number).toString();
+            if (typeof r.data.result !== 'undefined' && typeof r.data.result.value !== 'undefined') {
+                // if vesting account
+                if (r.data.result.type == 'cosmos-sdk/ValidatorVestingAccount') {
+                    txContext.sequence = Number(r.data.result.value.PeriodicVestingAccount.BaseVestingAccount.BaseAccount.sequence).toString();
+                    txContext.accountNumber = Number(r.data.result.value.PeriodicVestingAccount.BaseVestingAccount.BaseAccount.account_number).toString();
 
-                if (r.data.value.coins !== null) {
-                    const tmp = r.data.value.coins.filter(x => x.denom === txskava.DEFAULT_DENOM);
-                    if (tmp.length > 0) {
-                        txContext.balance = Big(tmp[0].amount).toString();
+                    if (r.data.result.value.PeriodicVestingAccount.BaseVestingAccount.BaseAccount.coins !== null) {
+                        const tmp = r.data.result.value.PeriodicVestingAccount.BaseVestingAccount.BaseAccount.coins.filter(x => x.denom === txskava.DEFAULT_DENOM);
+                        if (tmp.length > 0) {
+                            txContext.balance = Big(tmp[0].amount).toString();
+                        }
+                    }
+                } else {
+                    txContext.sequence = Number(r.data.result.value.sequence).toString();
+                    txContext.accountNumber = Number(r.data.result.value.account_number).toString();
+
+                    if (r.data.result.value.coins !== null) {
+                        const tmp = r.data.result.value.coins.filter(x => x.denom === txskava.DEFAULT_DENOM);
+                        if (tmp.length > 0) {
+                            txContext.balance = Big(tmp[0].amount).toString();
+                        }
                     }
                 }
             }
@@ -261,9 +275,9 @@ KavaDelegateTool.prototype.getAccountDelegations = async function (validators, a
         let totalDelegation = Big(0);
 
         try {
-            if (typeof r.data !== 'undefined' && r.data !== null) {
-                for (let i = 0; i < r.data.length; i += 1) {
-                    const t = r.data[i];
+            if (typeof r.data.result !== 'undefined' && r.data.result !== null) {
+                for (let i = 0; i < r.data.result.length; i += 1) {
+                    const t = r.data.result[i];
                     const valAddr = t.validator_address;
 
                     if (valAddr in validators) {
@@ -326,8 +340,8 @@ KavaDelegateTool.prototype.getRewards = async function (addr) {
         let reward = Big(0);
 
         try {
-            if (typeof r.data[0].amount !== 'undefined' && r.data !== null) {
-                reward = r.data[0].amount;
+            if (typeof r.data.result.total[0].amount !== 'undefined' && r.data.result !== null) {
+                reward = r.data.result.total[0].amount;
             }
         } catch (e) {
             console.log('Error ', e, ' returning defaults');

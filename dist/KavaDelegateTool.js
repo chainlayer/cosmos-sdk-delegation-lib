@@ -335,9 +335,10 @@ KavaDelegateTool.prototype.getPrice = function _callee5() {
     while (1) {
       switch (_context5.prev = _context5.next) {
         case 0:
-          url = "https://min-api.cryptocompare.com/data/price?fsym=KAVA&tsyms=USD";
+          // const url = `https://min-api.cryptocompare.com/data/price?fsym=KAVA&tsyms=USD`;
+          url = "https://api.coingecko.com/api/v3/simple/price?ids=kava&vs_currencies=USD";
           return _context5.abrupt("return", _axios["default"].get(url).then(function (r) {
-            return r.data.USD;
+            return r.data.kava.usd;
           }, function (e) {
             return wrapError(_this, e);
           }));
@@ -362,9 +363,9 @@ KavaDelegateTool.prototype.retrieveValidators = function _callee6() {
           return _context6.abrupt("return", _axios["default"].get(url).then(function (r) {
             var validators = {};
 
-            for (var i = 0; i < r.data.length; i += 1) {
+            for (var i = 0; i < r.data.result.length; i += 1) {
               var validatorData = {};
-              var t = r.data[i];
+              var t = r.data.result[i];
               validatorData.tokens = (0, _big["default"])(t.tokens);
               validatorData.totalShares = (0, _big["default"])(t.delegator_shares);
               validators[t.operator_address] = validatorData;
@@ -399,17 +400,33 @@ KavaDelegateTool.prototype.getAccountInfo = function _callee7(addr) {
           };
           return _context7.abrupt("return", _axios["default"].get(url).then(function (r) {
             try {
-              if (typeof r.data !== 'undefined' && typeof r.data.value !== 'undefined') {
-                txContext.sequence = Number(r.data.value.sequence).toString();
-                txContext.accountNumber = Number(r.data.value.account_number).toString();
+              if (typeof r.data.result !== 'undefined' && typeof r.data.result.value !== 'undefined') {
+                // if vesting account
+                if (r.data.result.type == 'cosmos-sdk/ValidatorVestingAccount') {
+                  txContext.sequence = Number(r.data.result.value.PeriodicVestingAccount.BaseVestingAccount.BaseAccount.sequence).toString();
+                  txContext.accountNumber = Number(r.data.result.value.PeriodicVestingAccount.BaseVestingAccount.BaseAccount.account_number).toString();
 
-                if (r.data.value.coins !== null) {
-                  var tmp = r.data.value.coins.filter(function (x) {
-                    return x.denom === _kava["default"].DEFAULT_DENOM;
-                  });
+                  if (r.data.result.value.PeriodicVestingAccount.BaseVestingAccount.BaseAccount.coins !== null) {
+                    var tmp = r.data.result.value.PeriodicVestingAccount.BaseVestingAccount.BaseAccount.coins.filter(function (x) {
+                      return x.denom === _kava["default"].DEFAULT_DENOM;
+                    });
 
-                  if (tmp.length > 0) {
-                    txContext.balance = (0, _big["default"])(tmp[0].amount).toString();
+                    if (tmp.length > 0) {
+                      txContext.balance = (0, _big["default"])(tmp[0].amount).toString();
+                    }
+                  }
+                } else {
+                  txContext.sequence = Number(r.data.result.value.sequence).toString();
+                  txContext.accountNumber = Number(r.data.result.value.account_number).toString();
+
+                  if (r.data.result.value.coins !== null) {
+                    var _tmp = r.data.result.value.coins.filter(function (x) {
+                      return x.denom === _kava["default"].DEFAULT_DENOM;
+                    });
+
+                    if (_tmp.length > 0) {
+                      txContext.balance = (0, _big["default"])(_tmp[0].amount).toString();
+                    }
                   }
                 }
               }
@@ -448,9 +465,9 @@ KavaDelegateTool.prototype.getAccountDelegations = function _callee8(validators,
             var totalDelegation = (0, _big["default"])(0);
 
             try {
-              if (typeof r.data !== 'undefined' && r.data !== null) {
-                for (var i = 0; i < r.data.length; i += 1) {
-                  var t = r.data[i];
+              if (typeof r.data.result !== 'undefined' && r.data.result !== null) {
+                for (var i = 0; i < r.data.result.length; i += 1) {
+                  var t = r.data.result[i];
                   var valAddr = t.validator_address;
 
                   if (valAddr in validators) {
@@ -567,8 +584,8 @@ KavaDelegateTool.prototype.getRewards = function _callee11(addr) {
             var reward = (0, _big["default"])(0);
 
             try {
-              if (typeof r.data[0].amount !== 'undefined' && r.data !== null) {
-                reward = r.data[0].amount;
+              if (typeof r.data.result.total[0].amount !== 'undefined' && r.data.result !== null) {
+                reward = r.data.result.total[0].amount;
               }
             } catch (e) {
               console.log('Error ', e, ' returning defaults');

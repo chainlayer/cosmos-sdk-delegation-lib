@@ -16,7 +16,7 @@
  ******************************************************************************* */
 
 const DEFAULT_DENOM = 'ukava';
-const DEFAULT_GAS = 200000;
+const DEFAULT_GAS = 280000;
 const DEFAULT_GAS_PRICE = 0.025;
 const DEFAULT_MEMO = '';
 

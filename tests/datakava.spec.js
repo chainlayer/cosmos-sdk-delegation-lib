@@ -70,7 +70,7 @@ test('get multiple accounts', async () => {
 
     const mock = new MockAdapter(axios);
     mock.onGet('mockNodeURL/staking/validators').reply(
-        200, [
+        200, {"height":"22960","result": [
             {
                 operator_address: 'some_validator_bech32',
                 tokens: '123456789',
@@ -81,7 +81,7 @@ test('get multiple accounts', async () => {
                 tokens: '2222',
                 delegator_shares: '4444',
             },
-        ],
+        ]},
     );
     mock.onGet('mockNodeURL/auth/accounts/cosmos1k7ezdfu3j69npzhccs6m4hu99pydagsva0h0gp').reply(
         200, {
@@ -561,16 +561,19 @@ test('get tx status - known', async () => {
 
 test('get price', async () => {
     const mock = new MockAdapter(axios);
-    mock.onGet('https://min-api.cryptocompare.com/data/price?fsym=KAVA&tsyms=USD').reply(
+    //mock.onGet('https://min-api.cryptocompare.com/data/price?fsym=KAVA&tsyms=USD').reply(
+    mock.onGet('https://api.coingecko.com/api/v3/simple/price?ids=kava&vs_currencies=USD').reply(
         200,
         {
-            USD: 5.407
+            "kava": {
+                "usd": 1.11
+            }
         },
     );
 
     const cdt = new KavaDelegateTool();
     const status = await cdt.getPrice();
-    expect(status).toBe(5.407);
+    expect(status).toBe(1.11);
 });
 
 test('get reward', async () => {
