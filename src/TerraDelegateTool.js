@@ -200,7 +200,7 @@ TerraDelegateTool.prototype.scanAddresses = async function (minAccount, maxAccou
 };
 
 TerraDelegateTool.prototype.getPrice = async function () {
-    const url = `https://api.coingecko.com/api/v3/coins/luna/tickers`;
+    const url = `https://api.coingecko.com/api/v3/coins/terra-luna/tickers`;
     return axios.get(url).then((r) => {
         return r.data.tickers[0].converted_last.usd;
     }, e => wrapError(this, e));

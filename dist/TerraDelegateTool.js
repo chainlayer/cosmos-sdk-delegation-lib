@@ -337,7 +337,7 @@ TerraDelegateTool.prototype.getPrice = function _callee5() {
     while (1) {
       switch (_context5.prev = _context5.next) {
         case 0:
-          url = "https://api.coingecko.com/api/v3/coins/luna/tickers";
+          url = "https://api.coingecko.com/api/v3/coins/terra-luna/tickers";
           return _context5.abrupt("return", _axios["default"].get(url).then(function (r) {
             return r.data.tickers[0].converted_last.usd;
           }, function (e) {
